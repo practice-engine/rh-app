@@ -1,0 +1,1191 @@
+/* ============================================================
+   Outbound Agent Report
+
+   Series palette validated with the dataviz checker, light mode,
+   categorical, adjacent pairlist: ALL CHECKS PASS. The adjacent
+   pairlist is the right test here because every categorical mark
+   is a labelled row (sorted bar chart) or a single stacked bar,
+   not a scatter field where any two marks can touch.
+
+   Colors are bound to the capability group, never to rank, so
+   filtering or re-sorting never repaints the survivors.
+
+   The contrast WARN on orange and teal is relieved, as the skill
+   requires, by a visible name and value on every mark plus the
+   detail list under each chart.
+   ============================================================ */
+:root {
+  /* Product-theme chart tokens: accent first, then the muted
+     companions, slate last. Used in this fixed order wherever a
+     chart needs multiple distinguishable series.
+
+     Validator note: the first four separate cleanly (worst adjacent
+     normal-vision dE 15.8). The companions sit below the chroma
+     floor by design - they are deliberately muted - and the accent
+     and green trip the sub-3:1 contrast WARN. Both are relieved as
+     the skill requires: every mark carries a visible label and
+     value, and each chart has a detail list or table twin. Slate is
+     a near-neutral, so it is ordered to never neighbor the violet,
+     the one pair that would otherwise collapse. */
+  --chart-1: #f5901f;  /* accent    */
+  --chart-2: #5287a0;  /* companion */
+  --chart-3: #86ab6f;  /* companion */
+  --chart-4: #8f7cc0;  /* companion */
+  --chart-5: #5f7289;  /* slate     */
+
+  /* Capability groups bind to the tokens above, so filtering or
+     re-sorting never repaints the survivors. */
+  --s-appointments: var(--chart-1);
+  --s-practice:     var(--chart-2);
+  --s-billing:      var(--chart-4);
+  --s-oos:          var(--chart-3);
+  --s-transfer:     var(--chart-5);
+
+  /* Status tokens, reserved: never reused as a series color. */
+  --st-good: #13876b;
+  --st-warn: #f5901f;
+  --st-crit: #c2334b;
+  --st-info: #5287a0;
+
+  --grid: #edeef1;
+
+  /* Sequential ramp for the heatmap, built from the accent hue.
+     Validated with --ordinal (monotone L, adjacent dL >= 0.06,
+     single hue, light end clears 2:1 on white): ALL CHECKS PASS. */
+  --heat-0: #e5a95a;
+  --heat-1: #d48d30;
+  --heat-2: #b8720e;
+  --heat-3: #8e5604;
+  --heat-4: #653d02;
+}
+
+/* Filters */
+.aa-filters {
+  grid-template-columns: 1.1fr 1fr 1fr 1fr;
+}
+.aa-filters-row2 {
+  grid-template-columns: 1.2fr 1.2fr 1fr;
+}
+.slice-note {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 2px 0 18px;
+}
+
+/* Tabs reuse the campaign-overview pattern */
+.tabs {
+  display: flex;
+  gap: 26px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.tab {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+.tab:hover { color: var(--text-dark); }
+.tab.active {
+  color: var(--orange);
+  border-bottom: 2px solid var(--orange);
+}
+.sub-tabs {
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.sub-tabs .tab { font-size: 13px; padding-bottom: 8px; }
+.tab-panel.hidden { display: none; }
+
+/* Panels */
+.panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+.panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+}
+.panel-sub {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: -12px 0 16px;
+}
+.panel-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+.panel-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 10px 0 0;
+}
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 1200px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+/* Two stacked panels that together balance a taller neighbor. */
+.stack-col > .panel:last-child { margin-bottom: 16px; }
+
+/* KPI cards - hero figures use the body sans, proportional digits */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+@media (max-width: 1500px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.kpi-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--s-oos);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.kpi-accent-total   { border-left-color: var(--s-billing); }
+.kpi-accent-good    { border-left-color: var(--st-good); }
+.kpi-accent-warn    { border-left-color: var(--st-warn); }
+.kpi-accent-crit    { border-left-color: var(--st-crit); }
+.kpi-accent-neutral { border-left-color: var(--s-practice); }
+.kpi-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: 27px;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.1;
+}
+.kpi-sub {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* Info banner */
+.info-banner { align-items: flex-start; line-height: 1.5; }
+.info-banner strong { color: #243b53; }
+
+/* ---------- Horizontal bar chart ---------- */
+.hbar-chart { display: flex; flex-direction: column; gap: 9px; }
+.hbar-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 92px;
+  align-items: center;
+  gap: 12px;
+  min-height: 26px;
+  border-radius: 4px;
+  outline: none;
+}
+.hbar-row:hover,
+.hbar-row:focus-visible { background: #fafbfc; }
+.hbar-label {
+  font-size: 12.5px;
+  color: var(--text-dark);
+  text-align: right;
+}
+.hbar-track {
+  height: 14px;
+  background: var(--grid);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.hbar-fill {
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  min-width: 2px;
+}
+.hbar-value {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-dark);
+  font-variant-numeric: tabular-nums;
+}
+.hbar-pct {
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+/* ---------- Stacked bar ---------- */
+.stack-bar {
+  display: flex;
+  height: 30px;
+  border-radius: 4px;
+  overflow: hidden;
+  gap: 2px; /* 2px surface gap between fills */
+  background: var(--grid);
+}
+.stack-seg {
+  min-width: 2px;
+  outline: none;
+  transition: opacity 0.12s;
+}
+.stack-seg:hover,
+.stack-seg:focus-visible { opacity: 0.8; }
+.stack-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 14px;
+}
+.legend-item {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-item strong { color: var(--text-dark); }
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Outcome detail list, doubles as the table view for the stacked bar */
+.outcome-detail {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+}
+.outcome-row {
+  display: grid;
+  grid-template-columns: 12px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid #f2f3f5;
+}
+.outcome-row:first-child { border-top: none; }
+.outcome-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+.outcome-note {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.outcome-figs {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+}
+.outcome-count {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+  font-variant-numeric: tabular-nums;
+}
+.outcome-share {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Donut ---------- */
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  flex-wrap: wrap;
+}
+.donut-figure {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  flex-shrink: 0;
+}
+.donut-svg { width: 100%; height: 100%; display: block; }
+.donut-arc {
+  outline: none;
+  transition: opacity 0.12s;
+}
+.donut-arc:hover,
+.donut-arc:focus-visible { opacity: 0.78; }
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+}
+.donut-center-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1;
+}
+.donut-center-label {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.donut-legend {
+  flex: 1;
+  min-width: 210px;
+  display: flex;
+  flex-direction: column;
+}
+.donut-item {
+  display: grid;
+  grid-template-columns: 10px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px solid #f2f3f5;
+  font-size: 12.5px;
+}
+.donut-item:first-child { border-top: none; }
+.donut-item-label { color: var(--text-dark); }
+.donut-item-value {
+  font-weight: 700;
+  color: var(--text-dark);
+  font-variant-numeric: tabular-nums;
+}
+.donut-item-share {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 42px;
+  text-align: right;
+}
+
+/* ---------- Column chart ---------- */
+.col-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 190px; /* plot band + tick band, so no nested scroll */
+  border-bottom: 1px solid var(--grid);
+}
+.col-slot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  min-width: 0;
+  outline: none;
+  border-radius: 3px;
+}
+.col-slot:hover,
+.col-slot:focus-visible { background: #fafbfc; }
+.col-stack {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 0;
+}
+.col-bar-total {
+  width: 72%;
+  max-width: 34px;
+  background: var(--s-practice);
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 2px;
+}
+.col-bar-done {
+  width: 100%;
+  background: var(--st-good);
+}
+.col-tick {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  padding-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Peak conversation hours heatmap ---------- */
+/* 24 hours x 7 days, so cells are compact and the grid scrolls
+   sideways on narrow screens rather than squeezing to unreadable. */
+.heat-wrap { overflow-x: auto; }
+.heat-table {
+  border-collapse: separate;
+  border-spacing: 3px;
+  width: 100%;
+  min-width: 940px;
+}
+.heat-corner { width: 44px; }
+.heat-hour {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+  padding-bottom: 3px;
+  white-space: nowrap;
+}
+.heat-day {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-align: left;
+  white-space: nowrap;
+  padding-right: 6px;
+}
+/* Weekend rows read as secondary, since the practice is closed or
+   on short hours and the volume is mostly afterhours traffic. */
+.heat-day-weekend { color: var(--text-muted); }
+.heat-cell { padding: 0; }
+.heat-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+  cursor: default;
+}
+/* Ink flips at step 2: dark text clears 5.0:1 on the two light
+   steps, white clears 3.85:1 on the three dark ones. Measured, not
+   eyeballed. */
+.heat-s0 { background: var(--heat-0); color: #3d2a05; }
+.heat-s1 { background: var(--heat-1); color: #3d2a05; }
+.heat-s2 { background: var(--heat-2); color: #fff; }
+.heat-s3 { background: var(--heat-3); color: #fff; }
+.heat-s4 { background: var(--heat-4); color: #fff; }
+.heat-empty {
+  background: #f4f5f7;
+  color: #b6b9bf;
+  font-weight: 400;
+}
+.heat-box:hover,
+.heat-box:focus-visible {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(224, 123, 12, 0.5);
+}
+.heat-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #f2f3f5;
+}
+.heat-legend-label {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+.heat-swatches { display: flex; gap: 3px; }
+.heat-swatch {
+  width: 26px;
+  height: 16px;
+  border-radius: 3px;
+}
+
+/* ---------- Call quality indicators ---------- */
+.qi-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+  margin-left: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.qi-badge-critical { background: #fbe4e4; color: #a8162c; }
+.qi-badge-warning  { background: #fdf0e0; color: #9a5a05; }
+.qi-badge-info     { background: #e9f2fe; color: #0b5fc0; }
+
+.qi-items { display: flex; flex-direction: column; gap: 9px; }
+.qi-item {
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  background: #f8f9fb;
+  border-left: 3px solid var(--s-oos);
+  border-radius: 5px;
+  padding: 13px 15px;
+  cursor: pointer;
+  outline: none;
+}
+.qi-item:hover,
+.qi-item:focus-visible { background: #f1f3f6; }
+.qi-item-critical { border-left-color: var(--st-crit); }
+.qi-item-warning  { border-left-color: var(--st-warn); }
+.qi-item-info     { border-left-color: var(--s-billing); }
+.qi-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.qi-dot-critical { background: var(--st-crit); }
+.qi-dot-warning  { background: var(--st-warn); }
+.qi-dot-info     { background: var(--s-billing); }
+.qi-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+/* The count is the control: it opens the matching calls. */
+.qi-count {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-dark);
+  font-variant-numeric: tabular-nums;
+  background: none;
+  border: none;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.qi-count:hover:not(:disabled),
+.qi-count:focus-visible:not(:disabled) {
+  color: var(--orange);
+  background: #fff;
+  text-decoration: underline;
+}
+.qi-count:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.modal-qi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.qi-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+.qi-chip-critical { background: #fbe4e4; color: #a8162c; }
+.qi-chip-warning  { background: #fdf0e0; color: #9a5a05; }
+.qi-chip-info     { background: #e9f2fe; color: #0b5fc0; }
+
+/* ---------- Shared tooltip ---------- */
+.viz-tip {
+  position: fixed;
+  z-index: 300;
+  background: #1f2937;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.45;
+  padding: 7px 10px;
+  border-radius: 5px;
+  max-width: 280px;
+  pointer-events: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+.viz-tip.hidden { display: none; }
+
+/* ---------- Capabilities tab ---------- */
+/* One chart per capability group, one stacked column per
+   capability. The outcome legend sits once above all the charts,
+   since every chart shares the same encoding. */
+.scol-legendbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+}
+.scol-legendbar-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.scol-legend {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+}
+.scol-legend .legend-item { white-space: nowrap; }
+
+/* Two charts per row on wide screens; the single-capability groups
+   are narrow enough to pair up. */
+/* Charts vary in height, so rows are packed independently rather
+   than stretched to a common row height, which left large voids
+   under the single-capability groups. */
+.scol-grid-outer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: min-content;
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 1250px) {
+  .scol-grid-outer { grid-template-columns: minmax(0, 1fr); }
+}
+.scol-panel { margin-bottom: 0; }
+
+.scol-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.scol-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.scol-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  padding-left: 18px;
+}
+.scol-head-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Axis gutter + plot. The container height includes the label band,
+   so x-axis labels are never clipped into a nested scrollbar. */
+.scol-chart {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 8px;
+}
+.scol-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 200px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+/* Each tick label is nudged up by half a line so it centers on its
+   gridline rather than sitting below it. */
+.scol-tick {
+  position: relative;
+  height: 0;
+  text-align: right;
+}
+.scol-tick span {
+  position: absolute;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.scol-plot { position: relative; }
+.scol-grid {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+/* Solid hairlines, one shade off the surface. Never dashed. */
+.scol-gridline {
+  height: 1px;
+  background: var(--grid);
+}
+.scol-gridline:last-child { background: #d9dbe0; }
+
+/* The plot band is exactly the axis height, and the label band sits
+   below it. Nesting the labels inside the 200px band would steal
+   plot height and break the gridline-to-bar correspondence. */
+.scol-cols {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+/* Slots cap their own width so a group with one or two capabilities
+   does not stretch a lone column across the whole panel. */
+.scol-slot {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 130px;
+  display: flex;
+  flex-direction: column;
+}
+.scol-colwrap {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+/* Floated above the bar rather than stacked in flow, so the bar
+   still spans the full axis height and its top edge lands on the
+   value its gridline indicates. */
+.scol-total {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dark);
+  font-variant-numeric: tabular-nums;
+}
+.scol-col {
+  position: relative;
+  width: 100%;
+  max-width: 54px;
+  min-height: 2px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 3px 3px 0 0;
+  outline: none;
+}
+.scol-col:focus-visible {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(245, 144, 31, 0.55);
+}
+/* The column cannot clip overflow (the total label sits above it),
+   so the top segment rounds its own corners instead. */
+.scol-seg {
+  width: 100%;
+  min-height: 2px;
+  outline: none;
+  transition: opacity 0.12s;
+}
+.scol-seg:first-of-type { border-radius: 3px 3px 0 0; }
+.scol-seg:hover,
+.scol-seg:focus-visible { opacity: 0.75; }
+
+/* Label band sits below the plot, inside the chart's own height. */
+.scol-label {
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: var(--text-muted);
+  text-align: center;
+  padding-top: 8px;
+  min-height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+
+.scol-foot {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.5;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.capgroup-id {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9px;
+  white-space: nowrap;
+}
+.capgroup-id.id-on { background: #e9f2fe; color: #0b5fc0; }
+.capgroup-id.id-off { background: #f1f2f4; color: var(--text-muted); }
+
+.cap-name { font-weight: 600; color: var(--text-dark); }
+.cap-ref {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.pt-name { font-weight: 600; }
+
+/* Numeric and action columns align right in BOTH header and body.
+   The `.report-table thead th` rule in styles.css sets text-align
+   left, so these need equal-or-greater specificity to win - a bare
+   `.col-num` loses to it and the header drifts left of its values. */
+.col-num { text-align: right; font-variant-numeric: tabular-nums; }
+.col-action { text-align: right; }
+.report-table thead th.col-num,
+
+.calls-mini-table thead th.col-num {
+  text-align: right;
+}
+.report-table thead th.col-action,
+
+.calls-mini-table thead th.col-action {
+  text-align: right;
+}
+
+/* Pills carry their own horizontal padding, which pushes their text
+   inward from the cell edge and reads as a misaligned column against
+   a plain-text header. Pulling the pill back by its padding lines the
+   pill text up with the header text. Plain spans like .muted-dash
+   have no such padding, so they are deliberately not shifted. */
+.report-table td > .outcome-pill,
+.report-table td > .status-chip,
+.calls-mini-table td > .outcome-pill {
+  margin-left: -9px;
+}
+
+.mini-meter {
+  display: inline-block;
+  width: 72px;
+  height: 7px;
+  background: var(--grid);
+  border-radius: 3px;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.mini-fill { height: 100%; border-radius: 0 3px 3px 0; }
+.mini-val {
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.link-btn {
+  border: none;
+  background: none;
+  color: var(--orange);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+}
+.link-btn:hover { text-decoration: underline; }
+
+/* ---------- Status chips ---------- */
+.status-chip {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.chip-pass { background: #eaf9f0; color: #137a36; }
+.chip-warn { background: #fdf0e0; color: #9a5a05; }
+.chip-fail { background: #fbe4e4; color: #a8162c; }
+.chip-info { background: #e9f2fe; color: #0b5fc0; }
+.flag-count { color: var(--st-crit); font-weight: 700; }
+.muted-dash { color: var(--text-muted); font-size: 12px; }
+.tag-new {
+  background: #f1eafd;
+  color: #6d28d9;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+/* ---------- Calls log ---------- */
+/* Same fixed-layout rule as the capability table. */
+.aa-table-wrap { max-height: 640px; }
+.report-table.aa-table {
+  table-layout: fixed;
+  min-width: 1100px;
+}
+.aa-table thead th {
+  padding: 11px 14px;
+  vertical-align: middle;
+}
+.aa-table td {
+  padding: 11px 14px;
+  vertical-align: middle;
+}
+.aa-table .col-dt { width: 13%; white-space: nowrap; }
+.aa-table .col-identity { width: 10%; }
+.aa-table .col-num { width: 8%; }
+.aa-table .col-quality { width: 9%; }
+.aa-table .col-action { width: 10%; }
+.aa-table tbody tr { cursor: pointer; }
+.aa-table thead th.sortable { cursor: pointer; user-select: none; }
+.aa-table thead th.sortable:hover { background: #e2e3e6; }
+/* The arrow sits outside the text flow on right-aligned numeric
+   headers, so its reserved width does not push the header label away
+   from the values it labels. */
+.sort-arrow {
+  display: inline-block;
+  width: 10px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.aa-table thead th.col-num { position: relative; }
+.aa-table thead th.col-num .sort-arrow {
+  position: absolute;
+  right: 3px;
+  width: auto;
+}
+.aa-table thead th.sort-asc .sort-arrow::after { content: "\25B2"; }
+.aa-table thead th.sort-desc .sort-arrow::after { content: "\25BC"; }
+
+.outcome-pill {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+/* Pill tints track the outcome colors above: status tints for the
+   three verdicts, companion tints for the two state outcomes. */
+.outcome-completed   { background: #e6f6f0; color: #0d6b54; }
+.outcome-transferred { background: #fdf0e0; color: #9a5a05; }
+.outcome-abandoned   { background: #fbe4e4; color: #96172e; }
+.outcome-afterhours  { background: #e8eff3; color: #35606f; }
+.outcome-crashed     { background: #edf2e9; color: #4a6b38; }
+
+.table-footer a {
+  color: var(--orange);
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.empty-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 18px 4px;
+  text-align: center;
+}
+
+/* ---------- Modal ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 24px;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  background: #fff;
+  border-radius: 8px;
+  width: 740px;
+  max-width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+.modal-wide { width: 1000px; }
+
+/* Calls list inside the quality-indicator modal. Fixed layout, same
+   as the main tables, so the header tracks the body columns. */
+.calls-modal-count {
+  margin-left: 10px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.calls-mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12.5px;
+}
+.calls-mini-table thead th {
+  text-align: left;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.calls-mini-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #f2f3f5;
+  vertical-align: middle;
+}
+.calls-mini-table tbody tr:last-child td { border-bottom: none; }
+.calls-mini-table tbody tr { cursor: pointer; }
+.calls-mini-table tbody tr:hover { background: #fafbfc; }
+.calls-mini-table .cm-dt { width: 19%; white-space: nowrap; }
+.calls-mini-table .col-num { width: 11%; }
+.calls-mini-table .col-action { width: 13%; }
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+}
+.modal-title { font-size: 17px; font-weight: 700; color: var(--text-dark); }
+.modal-subtitle {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.modal-close {
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.modal-body { padding: 20px 24px 24px; }
+.modal-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+@media (max-width: 760px) {
+  .modal-info-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.modal-info-box {
+  background: #f7f8fa;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.info-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.modal-info-value {
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-top: 5px;
+  color: var(--text-dark);
+  line-height: 1.35;
+}
+.val-good { color: #137a36; }
+.val-bad { color: #a8162c; }
+.val-muted { color: var(--text-muted); font-weight: 600; }
+
+.modal-section { margin-bottom: 22px; }
+.modal-section:last-child { margin-bottom: 0; }
+.modal-summary {
+  font-size: 13px;
+  color: var(--text-dark);
+  margin: 7px 0 0;
+  line-height: 1.55;
+}
+.modal-fineprint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 6px 0 0;
+  font-style: italic;
+}
+.modal-kv {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 20px;
+  margin-top: 8px;
+}
+.kv {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12.5px;
+  padding: 5px 0;
+  border-bottom: 1px solid #f2f3f5;
+}
+.kv-k { color: var(--text-muted); }
+.kv-v { font-weight: 600; color: var(--text-dark); }
+
+.comp-clean {
+  font-size: 13px;
+  font-weight: 600;
+  color: #137a36;
+  background: #eaf9f0;
+  border-radius: 5px;
+  padding: 10px 12px;
+  margin-top: 7px;
+}
+
+.transcript-box {
+  margin-top: 8px;
+  background: #f7f8fa;
+  border-radius: 6px;
+  padding: 14px 16px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.transcript-line {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+.transcript-line:last-child { margin-bottom: 0; }
+.transcript-speaker {
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding-top: 1px;
+}
+.transcript-agent .transcript-speaker { color: var(--orange); }
+.transcript-caller .transcript-speaker { color: #0b5fc0; }
+.transcript-system .transcript-speaker { color: var(--text-muted); }
+.transcript-system .transcript-text {
+  color: var(--text-muted);
+  font-style: italic;
+}
+.transcript-text mark {
+  background: #fde68a;
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 2px;
+}

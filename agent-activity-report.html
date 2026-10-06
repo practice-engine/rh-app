@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recall Health - Outbound Agent Report</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="agent-activity-report.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Recall <span>Health</span></div>
+      <nav>
+        <a class="nav-item" href="#"><span class="icon">&#9638;</span>DASHBOARD</a>
+        <a class="nav-item" href="campaign-overview.html"><span class="icon">&#128227;</span>CAMPAIGNS</a>
+        <a class="nav-item" href="#"><span class="icon">&#9684;</span>ANALYTICS</a>
+        <div class="nav-sub">
+          <a href="#">Schedule Utilization</a>
+          <a href="#">Reactivation Age</a>
+          <a href="#">Performance Report</a>
+          <a href="#">Campaign Aging</a>
+          <a href="#">Appointment Aging</a>
+        </div>
+        <a class="nav-item" href="#"><span class="icon">&#128200;</span>REPORTS</a>
+        <div class="nav-sub">
+          <a href="#">Reactivation Summary</a>
+          <a href="#">Patient Survey Report</a>
+          <a href="#">Appointment Report</a>
+          <a href="#">Contact Log</a>
+          <a href="#">Invalid Contact Data</a>
+          <a href="#">Opt-out Report</a>
+          <a href="outreach-report.html">Outreach Report</a>
+          <a href="agent-activity-report.html" class="active">Outbound Agent Report</a>
+          <a href="#">Call Transcription</a>
+        </div>
+        <a class="nav-item" href="#"><span class="icon">&#129534;</span>FINANCIALS</a>
+        <div class="nav-sub">
+          <a href="#">Lost Revenue</a>
+          <a href="#">Revenue Details</a>
+        </div>
+        <a class="nav-item" href="#"><span class="icon">&#128101;</span>PATIENTS</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+      <header class="topbar">
+        <div></div>
+        <div class="topbar-right">
+          <button class="btn-create">+ Create Campaign</button>
+          <div class="user">
+            <div class="user-info">
+              <div class="user-name">Shweta Singh</div>
+              <div class="user-role">Global Admin</div>
+            </div>
+            <div class="avatar">&#129485;</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="content-header">
+          <h1>OUTBOUND AGENT REPORT</h1>
+          <div class="header-links">
+            <a href="#" class="link-underline" id="clear-filters">Clear Filters</a>
+            <a href="#" class="link-export">&#8677; Export CSV</a>
+          </div>
+        </div>
+
+        <!-- One filter row scoping both tabs -->
+        <div id="filter-block">
+          <div class="filters aa-filters">
+            <div class="filter-group">
+              <label>Practice (1)</label>
+              <div class="pill-box">
+                <span class="pill">Dermatology of Boca <button class="pill-x">&times;</button></span>
+                <span class="chevron">&#8964;</span>
+              </div>
+            </div>
+            <div class="filter-group">
+              <label>Call Period</label>
+              <select class="dropdown">
+                <option>Sep 6, 2026 - Oct 6, 2026</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Capability Group</label>
+              <select class="dropdown" id="f-group">
+                <option value="">All Capabilities</option>
+                <option value="Appointments">Appointments</option>
+                <option value="Billing">Billing</option>
+                <option value="Practice Info">Practice Info</option>
+                <option value="Only Staff Transfer">Only Staff Transfer</option>
+                <option value="Out of Scope">Out of Scope</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Outcome</label>
+              <select class="dropdown" id="f-outcome">
+                <option value="">All Outcomes</option>
+                <option value="Completed">Completed by Agent</option>
+                <option value="Transferred">Transferred to Staff</option>
+                <option value="Abandoned">Caller Abandoned</option>
+                <option value="Afterhours">Afterhours Transfer</option>
+                <option value="Crashed">Agent Crashed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filters aa-filters">
+            <div class="filter-group">
+              <label>Search by Patient</label>
+              <input type="text" class="dropdown" id="f-patient" placeholder="Name, MRN, or DOB (mm/dd/yyyy)" />
+            </div>
+            <div class="filter-group">
+              <label>Search by Transcript Keyword</label>
+              <input type="text" class="dropdown" id="f-keyword" placeholder="Words spoken on the call" />
+            </div>
+            <div class="filter-group">
+              <label>Call Quality</label>
+              <select class="dropdown" id="f-quality">
+                <option value="">All Calls</option>
+                <option value="any">Any issue detected</option>
+                <option value="critical">Critical issues</option>
+                <option value="warning">Warnings</option>
+                <option value="info">Info only</option>
+                <option value="none">No issues</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Sentiment</label>
+              <select class="dropdown" id="f-sentiment">
+                <option value="">All Sentiment</option>
+                <option value="Positive">Positive</option>
+                <option value="Neutral">Neutral</option>
+                <option value="Negative">Negative</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs, below the filters -->
+        <div class="tabs">
+          <a href="#" class="tab active" data-tab="overview">Overview</a>
+          <a href="#" class="tab" data-tab="capabilities">Capabilities</a>
+          <a href="#" class="tab" data-tab="log">Calls Log</a>
+        </div>
+
+        <!-- ============ TAB: OVERVIEW ============ -->
+        <div class="tab-panel" id="tab-overview">
+          <div class="kpi-grid">
+            <div class="kpi-card kpi-accent-total">
+              <div class="kpi-label">Total Calls</div>
+              <div class="kpi-value" id="kpi-total">0</div>
+              <div class="kpi-sub" id="kpi-total-sub">&nbsp;</div>
+            </div>
+            <div class="kpi-card kpi-accent-good">
+              <div class="kpi-label">Automation Rate</div>
+              <div class="kpi-value" id="kpi-automation">0%</div>
+              <div class="kpi-sub" id="kpi-automation-sub">&nbsp;</div>
+            </div>
+            <div class="kpi-card kpi-accent-warn">
+              <div class="kpi-label">Transferred to Staff</div>
+              <div class="kpi-value" id="kpi-transfer">0%</div>
+              <div class="kpi-sub" id="kpi-transfer-sub">&nbsp;</div>
+            </div>
+            <div class="kpi-card kpi-accent-neutral">
+              <div class="kpi-label">Appointments Booked</div>
+              <div class="kpi-value" id="kpi-booked">0</div>
+              <div class="kpi-sub" id="kpi-booked-sub">&nbsp;</div>
+            </div>
+            <div class="kpi-card kpi-accent-neutral">
+              <div class="kpi-label">Avg Call Time</div>
+              <div class="kpi-value" id="kpi-act">0:00</div>
+              <div class="kpi-sub">Across all answered calls</div>
+            </div>
+            <div class="kpi-card kpi-accent-crit">
+              <div class="kpi-label">Calls Needing Review</div>
+              <div class="kpi-value" id="kpi-review">0</div>
+              <div class="kpi-sub" id="kpi-review-sub">&nbsp;</div>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <section class="panel">
+              <div class="panel-title">How calls ended</div>
+              <div id="chart-outcome"></div>
+            </section>
+            <div class="stack-col">
+              <section class="panel">
+                <div class="panel-title">Appointment actions completed</div>
+                <div id="chart-appointments"></div>
+              </section>
+              <section class="panel">
+                <div class="panel-title">What callers asked for</div>
+                <div id="chart-groups"></div>
+              </section>
+            </div>
+          </div>
+
+          <section class="panel">
+            <div class="panel-title-row">
+              <div>
+                <div class="panel-title">Peak Conversation Hours</div>
+                <div class="panel-sub">Heatmap by day and time</div>
+              </div>
+            </div>
+            <div id="chart-heatmap"></div>
+          </section>
+
+          <div class="two-col">
+            <section class="panel">
+              <div class="panel-title-row">
+                <div>
+                  <div class="panel-title">Call Quality Indicators</div>
+                  <div class="panel-sub">Issues detected across all calls</div>
+                </div>
+              </div>
+              <div class="tabs sub-tabs" id="qi-tabs"></div>
+              <div id="qi-list"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-title">Daily call volume and automation</div>
+              <div id="chart-daily"></div>
+            </section>
+          </div>
+        </div>
+
+        <!-- ============ TAB: CAPABILITIES ============ -->
+        <div class="tab-panel hidden" id="tab-capabilities">
+          <div class="info-banner">
+            <span class="info-icon">&#9432;</span>
+            <div>
+              Each capability the agent can perform on a live call, with how often it was used and how well it landed.
+              <strong>Name and date of birth are required for appointments and billing only</strong>; hours, address,
+              phone, fax, providers, and services are answered without identity.
+            </div>
+          </div>
+          <div id="cap-groups"></div>
+        </div>
+
+        <!-- ============ TAB: CALLS LOG ============ -->
+        <div class="tab-panel hidden" id="tab-log">
+          <div class="info-banner">
+            <span class="info-icon">&#9432;</span>
+            <div>
+              Every call, with the capability used, whether identity was required and verified, how the call ended,
+              and any quality issues detected. Select a row to read the transcript.
+            </div>
+          </div>
+
+          <div class="table-wrap aa-table-wrap">
+            <table class="report-table aa-table" id="aa-table">
+              <thead>
+                <tr>
+                  <th class="sortable col-dt" data-sort="datetime">Date / Time <span class="sort-arrow"></span></th>
+                  <th class="sortable" data-sort="patient">Patient <span class="sort-arrow"></span></th>
+                  <th class="sortable" data-sort="capability">Capability <span class="sort-arrow"></span></th>
+                  <th class="col-identity">Identity</th>
+                  <th class="sortable" data-sort="outcome">Outcome <span class="sort-arrow"></span></th>
+                  <th class="sortable col-num" data-sort="duration"><span class="th-label">Duration</span><span class="sort-arrow"></span></th>
+                  <th class="col-quality">Quality</th>
+                  <th class="col-action"></th>
+                </tr>
+              </thead>
+              <tbody id="aa-table-body"></tbody>
+            </table>
+          </div>
+          <div class="table-footer" id="aa-table-footer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared chart tooltip -->
+  <div class="viz-tip hidden" id="viz-tip" role="status"></div>
+
+  <!-- Calls list modal, opened from a quality indicator count -->
+  <div class="modal-overlay hidden" id="calls-modal-overlay">
+    <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="calls-modal-title">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="calls-modal-title"></div>
+          <div class="modal-subtitle" id="calls-modal-sub"></div>
+        </div>
+        <button class="modal-close" id="calls-modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="calls-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Call detail modal -->
+  <div class="modal-overlay hidden" id="aa-modal-overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-patient">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="modal-patient">Patient Name</div>
+          <div class="modal-subtitle" id="modal-meta"></div>
+        </div>
+        <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-info-grid">
+          <div class="modal-info-box">
+            <div class="info-label">CAPABILITY</div>
+            <div class="modal-info-value" id="modal-capability"></div>
+            <div class="cap-ref" id="modal-capability-ref"></div>
+          </div>
+          <div class="modal-info-box">
+            <div class="info-label">OUTCOME</div>
+            <div class="modal-info-value" id="modal-outcome"></div>
+          </div>
+          <div class="modal-info-box">
+            <div class="info-label">IDENTITY</div>
+            <div class="modal-info-value" id="modal-identity"></div>
+          </div>
+          <div class="modal-info-box">
+            <div class="info-label">SENTIMENT</div>
+            <div class="modal-info-value" id="modal-sentiment"></div>
+          </div>
+        </div>
+
+        <div class="modal-section" id="modal-patient-section">
+          <div class="info-label">PATIENT RECORD</div>
+          <div class="modal-kv" id="modal-patient-record"></div>
+        </div>
+
+        <div class="modal-section">
+          <div class="info-label">WHAT THE AGENT DID</div>
+          <p class="modal-summary" id="modal-summary"></p>
+          <p class="modal-fineprint" id="modal-identity-note"></p>
+        </div>
+
+        <div class="modal-section">
+          <div class="info-label">CALL QUALITY</div>
+          <div id="modal-quality"></div>
+        </div>
+
+        <div class="modal-section">
+          <div class="info-label">TEXT CONFIRMATION</div>
+          <div class="modal-summary" id="modal-sms"></div>
+        </div>
+
+        <div class="modal-section">
+          <div class="info-label">TRANSCRIPT</div>
+          <div class="transcript-box" id="modal-transcript"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="agent-activity-data.js"></script>
+  <script src="agent-activity-report.js"></script>
+</body>
+</html>

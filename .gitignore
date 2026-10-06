@@ -1,0 +1,11 @@
+# Local Claude Code tool permissions, machine-specific paths
+.claude/
+
+# OS and editor cruft
+Thumbs.db
+desktop.ini
+.DS_Store
+*.swp
+
+# Dependencies, if any tooling is added later
+node_modules/

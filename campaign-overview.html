@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recall Health - Campaign Overview</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="campaign-overview.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Recall <span>Health</span></div>
+      <nav>
+        <a class="nav-item" href="#"><span class="icon">▦</span>DASHBOARD</a>
+        <a class="nav-item active" href="campaign-overview.html"><span class="icon">📣</span>CAMPAIGNS</a>
+        <a class="nav-item" href="#"><span class="icon">◔</span>ANALYTICS</a>
+        <div class="nav-sub">
+          <a href="#">Schedule Utilization</a>
+          <a href="#">Reactivation Age</a>
+          <a href="#">Performance Report</a>
+          <a href="#">Campaign Aging</a>
+          <a href="#">Appointment Aging</a>
+        </div>
+        <a class="nav-item" href="#"><span class="icon">📈</span>REPORTS</a>
+        <div class="nav-sub">
+          <a href="#">Reactivation Summary</a>
+          <a href="#">Patient Survey Report</a>
+          <a href="#">Appointment Report</a>
+          <a href="#">Contact Log</a>
+          <a href="#">Invalid Contact Data</a>
+          <a href="#">Opt-out Report</a>
+          <a href="outreach-report.html">Outreach Report</a>
+          <a href="agent-activity-report.html">Outbound Agent Report</a>
+          <a href="#">Call Transcription</a>
+        </div>
+        <a class="nav-item" href="#"><span class="icon">🧾</span>FINANCIALS</a>
+        <div class="nav-sub">
+          <a href="#">Lost Revenue</a>
+          <a href="#">Revenue Details</a>
+        </div>
+        <a class="nav-item" href="#"><span class="icon">👥</span>PATIENTS</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+      <header class="topbar">
+        <div></div>
+        <div class="topbar-right">
+          <button class="btn-create">+ Create Campaign</button>
+          <div class="user">
+            <div class="user-info">
+              <div class="user-name">Shweta Singh</div>
+              <div class="user-role">Global Admin</div>
+            </div>
+            <div class="avatar">🧑‍⚕️</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Campaign header -->
+        <div class="campaign-header">
+          <div class="campaign-title-row">
+            <div class="campaign-logo">DERM</div>
+            <div>
+              <div class="campaign-title-line">
+                <h1 id="c-name">DERM OF BOCA GO LIVE</h1>
+                <span class="badge badge-active" id="c-status">Active</span>
+                <span class="badge badge-type" id="c-type">Clinical &rarr; Diagnosis Based</span>
+              </div>
+              <div class="campaign-meta">
+                <span id="c-practice">Dermatology of Boca</span> &nbsp;|&nbsp;
+                Activated <span id="c-activated">06/23/2025</span> &nbsp;|&nbsp;
+                Currently Eligible Patients: <a href="#" id="c-eligible">7,374</a>
+              </div>
+            </div>
+          </div>
+          <div class="campaign-actions">
+            <a href="#">⏸ Pause</a>
+            <a href="#">⊘ Terminate</a>
+            <a href="#">🖨 Print ▾</a>
+            <a href="#">↺ Activity Log</a>
+            <a href="#">‹ Back</a>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <a href="#" class="tab active" data-tab="detail">Campaign Detail</a>
+          <a href="#" class="tab" data-tab="appointments">Appointments</a>
+          <a href="#" class="tab" data-tab="contact-log">Contact Log</a>
+          <a href="#" class="tab" data-tab="timeline">Timeline</a>
+        </div>
+
+        <!-- Campaign Detail tab -->
+        <div class="tab-panel" id="tab-detail">
+          <!-- Top stat cards -->
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-top"><span>Patients Contacted</span><span class="info-dot">ⓘ</span></div>
+              <div class="stat-value" id="s-contacted">12,082</div>
+              <div class="stat-sub"><span id="s-contacted-ok">9,269</span> successful &bull; <span id="s-contacted-fail">2,813</span> failed</div>
+              <div class="progress-track two-tone">
+                <div class="progress-fill fill-orange" id="s-contacted-bar"></div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top"><span>Appointments Created</span><span class="info-dot">ⓘ</span></div>
+              <div class="stat-value" id="s-created">2,864</div>
+              <div class="stat-sub"><span id="s-created-rate">30.9%</span> of successfully contacted</div>
+              <div class="progress-track"><div class="progress-fill fill-cyan" id="s-created-bar"></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top"><span>Appointments Completed</span><span class="info-dot">ⓘ</span></div>
+              <div class="stat-value" id="s-completed">2,245</div>
+              <div class="stat-sub"><span id="s-completed-rate">78.4%</span> of created</div>
+              <div class="progress-track"><div class="progress-fill fill-green" id="s-completed-bar"></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top"><span>Overall Conversion</span><span class="info-dot">ⓘ</span></div>
+              <div class="stat-value" id="s-conversion">24.2%</div>
+              <div class="stat-sub">Successfully Contacted &rarr; Completed</div>
+              <div class="progress-track"><div class="progress-fill fill-black" id="s-conversion-bar"></div></div>
+            </div>
+          </div>
+
+          <!-- Financial + Channel -->
+          <div class="two-col">
+            <div class="panel">
+              <div class="panel-title"><span>Financial Impact &amp; Outcomes</span><span class="info-dot">ⓘ</span></div>
+              <div class="fin-label">TOTAL ESTIMATED REVENUE <span class="info-dot">ⓘ</span></div>
+              <div class="fin-value fin-green" id="f-revenue">$644,400</div>
+              <div class="fin-row">
+                <div>
+                  <div class="fin-label">BILLED <span class="info-dot">ⓘ</span></div>
+                  <div class="fin-value" id="f-billed">$942,276</div>
+                </div>
+                <div>
+                  <div class="fin-label">COLLECTED <span class="info-dot">ⓘ</span></div>
+                  <div class="fin-value" id="f-collected">$417,955</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-title"><span>Channel Performance</span><span class="info-dot">ⓘ</span></div>
+              <div class="channel-box">
+                <div class="channel-top">
+                  <span>📞 SMS <strong id="ch-sms-sent">26,983</strong> sent</span>
+                  <span class="pill-danger">Text opt-outs: <span id="ch-sms-optout">1,292</span></span>
+                </div>
+                <div class="channel-label">Delivered</div>
+                <div class="progress-track two-tone"><div class="progress-fill fill-green" id="ch-sms-bar"></div></div>
+              </div>
+              <div class="channel-box">
+                <div class="channel-top">
+                  <span>✉️ Email <strong id="ch-email-sent">16,569</strong> sent</span>
+                  <span class="pill-danger">Email opt-outs: <span id="ch-email-optout">304</span></span>
+                </div>
+                <div class="channel-label">Delivered</div>
+                <div class="progress-track two-tone"><div class="progress-fill fill-green" id="ch-email-bar"></div></div>
+                <div class="channel-substats">
+                  <div class="channel-substat">
+                    <span class="channel-substat-label">Opened</span>
+                    <span class="channel-substat-value" id="ch-email-opened">9,812</span>
+                  </div>
+                  <div class="channel-substat">
+                    <span class="channel-substat-label">Clicked</span>
+                    <span class="channel-substat-value" id="ch-email-clicked">3,266</span>
+                  </div>
+                  <div class="channel-substat">
+                    <span class="channel-substat-label">Reported Spam</span>
+                    <span class="channel-substat-value channel-substat-danger" id="ch-email-spam">57</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multi-attempt performance -->
+          <div class="panel">
+            <div class="panel-title-row">
+              <div class="panel-title"><span>Multi-Attempt Performance</span><span class="info-dot">ⓘ</span></div>
+              <div class="legend">
+                <span class="legend-item"><span class="dot dot-created"></span>Created</span>
+                <span class="legend-item"><span class="dot dot-completed"></span>Completed</span>
+              </div>
+            </div>
+            <div class="attempt-grid">
+              <div class="chart-wrap">
+                <svg id="attempt-chart" viewBox="0 0 640 320" preserveAspectRatio="none"></svg>
+              </div>
+              <div class="attempt-table-wrap">
+                <table class="attempt-table">
+                  <thead>
+                    <tr>
+                      <th>Attempt</th>
+                      <th>Contacts</th>
+                      <th>Email</th>
+                      <th>Text</th>
+                      <th>Created</th>
+                      <th>Completed</th>
+                    </tr>
+                  </thead>
+                  <tbody id="attempt-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campaign info + logic -->
+          <div class="two-col">
+            <div class="panel">
+              <div class="panel-title"><span>Campaign Information</span></div>
+              <div class="tabs sub-tabs">
+                <a href="#" class="tab active">Overview</a>
+                <a href="#" class="tab">Locations</a>
+                <a href="#" class="tab">Providers</a>
+              </div>
+              <div class="info-grid">
+                <div class="info-box">
+                  <div class="info-label">LOCATIONS</div>
+                  <div class="info-count"><span id="i-locations">1</span> <span class="unit">total</span></div>
+                  <div class="info-tags">
+                    <span class="tag-active" id="i-locations-active">1 Active</span>
+                    <span class="tag-inactive" id="i-locations-inactive">0 Inactive</span>
+                  </div>
+                </div>
+                <div class="info-box">
+                  <div class="info-label">PROVIDERS</div>
+                  <div class="info-count"><span id="i-providers">2</span> <span class="unit">total</span></div>
+                  <div class="info-tags">
+                    <span class="tag-active" id="i-providers-active">2 Active</span>
+                    <span class="tag-inactive" id="i-providers-inactive">0 Inactive</span>
+                  </div>
+                </div>
+              </div>
+              <div class="info-label" style="margin-top:16px;">CAMPAIGN CONTACT NUMBERS</div>
+              <div class="phone-box">
+                <div class="info-label">PRACTICE PHONE NUMBER</div>
+                <div class="phone-value" id="i-phone">(561) 362-8000</div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-title"><span>Campaign Logic</span></div>
+              <div class="logic-item">
+                <div class="logic-title">⊙ Target</div>
+                <div class="logic-desc" id="l-target">Appointments in Jan 1, 2019 to 14 month.</div>
+              </div>
+              <div class="logic-item">
+                <div class="logic-title">⊙ Condition</div>
+                <div class="logic-desc" id="l-condition">No future appointment scheduled.</div>
+              </div>
+              <div class="logic-item">
+                <div class="logic-title">⊙ Diagnosis groups</div>
+                <div class="logic-desc" id="l-diagnosis">N/A</div>
+              </div>
+              <div class="info-banner logic-banner">
+                We do not contact minor patients and patients marked as inactive or deceased in your system.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Log tab -->
+        <div class="tab-panel hidden" id="tab-contact-log">
+          <div class="panel">
+            <div class="panel-title"><span>CONTACT LOG</span></div>
+            <div class="table-wrap contact-log-wrap">
+              <table class="report-table contact-log-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Patient Name</th>
+                    <th>MRN</th>
+                    <th>Age (years)</th>
+                    <th>Method</th>
+                    <th>Attempt</th>
+                    <th>Status</th>
+                    <th>Failure Reason</th>
+                  </tr>
+                </thead>
+                <tbody id="contact-log-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments / Timeline placeholders -->
+        <div class="tab-panel hidden" id="tab-appointments">
+          <div class="panel">
+            <div class="panel-title"><span>Appointments</span></div>
+            <p class="placeholder-text">Appointment list for this campaign will appear here.</p>
+          </div>
+        </div>
+        <div class="tab-panel hidden" id="tab-timeline">
+          <div class="panel">
+            <div class="panel-title"><span>Timeline</span></div>
+            <p class="placeholder-text">Campaign activity timeline will appear here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="campaign-overview.js"></script>
+</body>
+</html>

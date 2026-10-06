@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recall Health - Outreach Report</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Recall <span>Health</span></div>
+      <nav>
+        <a class="nav-item" href="#"><span class="icon">▦</span>DASHBOARD</a>
+        <a class="nav-item" href="campaign-overview.html"><span class="icon">📣</span>CAMPAIGNS</a>
+        <a class="nav-item" href="#"><span class="icon">◔</span>ANALYTICS</a>
+        <div class="nav-sub">
+          <a href="#">Schedule Utilization</a>
+          <a href="#">Reactivation Age</a>
+          <a href="#">Performance Report</a>
+          <a href="#">Campaign Aging</a>
+          <a href="#">Appointment Aging</a>
+        </div>
+        <a class="nav-item" href="#"><span class="icon">📈</span>REPORTS</a>
+        <div class="nav-sub">
+          <a href="#">Reactivation Summary</a>
+          <a href="#">Patient Survey Report</a>
+          <a href="#">Appointment Report</a>
+          <a href="#">Contact Log</a>
+          <a href="#">Invalid Contact Data</a>
+          <a href="#">Opt-out Report</a>
+          <a href="outreach-report.html" class="active">Outreach Report</a>
+          <a href="agent-activity-report.html">Outbound Agent Report</a>
+          <a href="#">Call Transcription</a>
+        </div>
+        <a class="nav-item" href="#"><span class="icon">🧾</span>FINANCIALS</a>
+        <div class="nav-sub">
+          <a href="#">Lost Revenue</a>
+          <a href="#">Revenue Details</a>
+        </div>
+        <a class="nav-item" href="#"><span class="icon">👥</span>PATIENTS</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+      <header class="topbar">
+        <div></div>
+        <div class="topbar-right">
+          <button class="btn-create">+ Create Campaign</button>
+          <div class="user">
+            <div class="user-info">
+              <div class="user-name">Shweta Singh</div>
+              <div class="user-role">Global Admin</div>
+            </div>
+            <div class="avatar">🧑‍⚕️</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="content-header">
+          <h1>OUTREACH REPORT</h1>
+          <div class="header-links">
+            <a href="#" class="link-underline">Clear Filters</a>
+            <a href="#" class="link-export">⇥ Export CSV</a>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+          <div class="filter-group">
+            <label>Practice (1)</label>
+            <div class="pill-box">
+              <span class="pill">Dermatology of Boca <button class="pill-x">×</button></span>
+              <span class="chevron">⌄</span>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>Locations (5)</label>
+            <div class="pill-box multi">
+              <span class="pill">Boca Raton Regional Hospital <span class="tag-inactive">Inactive</span> <button class="pill-x">×</button></span>
+              <span class="pill">Dermatology of Boca <button class="pill-x">×</button></span>
+              <span class="pill faded">Miami Beach <span class="tag-inactive">Inactive</span> <button class="pill-x">×</button></span>
+              <span class="scrollbar"></span>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>Providers (21)</label>
+            <div class="pill-box multi">
+              <span class="pill">Dr. Alecia Folkes, DO <span class="tag-inactive">Inactive</span> <button class="pill-x">×</button></span>
+              <span class="pill">Dr. Arthur Weissmann, MD <button class="pill-x">×</button></span>
+              <span class="pill faded">Dr. Carlos Ricotti, MD <span class="tag-inactive">Inactive</span> <button class="pill-x">×</button></span>
+              <span class="scrollbar"></span>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>Reason Group</label>
+            <select class="dropdown">
+              <option>Full Body Skin Exam</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filters row2">
+          <div class="filter-group">
+            <label>Outreach Period</label>
+            <select class="dropdown">
+              <option>Jun 12, 2025 - Sep 15, 2026</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Campaign</label>
+            <select class="dropdown">
+              <option>Select Campaign</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Info banner -->
+        <div class="info-banner">
+          <span class="info-icon">ⓘ</span>
+          This report tracks all outreach activity, including the number of text and email attempts made and how many were successfully delivered to patients, along with downstream email engagement (opens, clicks, and spam reports).
+        </div>
+
+        <!-- Metric cards -->
+        <div class="metric-grid metric-grid-5">
+          <div class="metric-card">
+            <div class="metric-top"><span>Texts Delivered</span></div>
+            <div class="metric-line">
+              <span class="metric-value" id="m-text-delivered">20,017</span>
+              <span class="metric-of">of <span id="m-text-attempts">26,955</span> attempted</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-top"><span>Emails Delivered</span></div>
+            <div class="metric-line">
+              <span class="metric-value" id="m-email-delivered">13,744</span>
+              <span class="metric-of">of <span id="m-email-attempts">16,570</span> attempted</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-top"><span>Emails Opened</span></div>
+            <div class="metric-line">
+              <span class="metric-value" id="m-email-opened">9,812</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-top"><span>Link Clicks</span></div>
+            <div class="metric-line">
+              <span class="metric-value" id="m-email-clicked">3,266</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-top"><span>Spam Reports</span></div>
+            <div class="metric-line">
+              <span class="metric-value" id="m-email-spam">57</span>
+            </div>
+          </div>
+        </div>
+
+        <a href="#" class="expand-all" id="expand-all">◇ Expand All</a>
+
+        <!-- Table -->
+        <div class="table-wrap">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th class="col-date">Date</th>
+                <th>Text Attempts</th>
+                <th>Texts Delivered</th>
+                <th>Email Attempts</th>
+                <th>Emails Delivered</th>
+                <th>Emails Opened</th>
+                <th>Link Clicks</th>
+                <th>Spam Reports</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">Showing 1 practice with 296 records total</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
