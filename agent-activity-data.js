@@ -113,6 +113,11 @@ const QI_RATE = {
   confused: 0.075, language: 0.067, escalation: 0.051,
 };
 
+/* The voice agent's own name, as it introduces itself on a call.
+   Declared once so renaming it is a single edit. */
+const AGENT_NAME = "Bella";
+const PRACTICE_NAME = "Dermatology of Boca";
+
 const FIRST_NAMES = ["Alex", "Jordan", "Taylor", "Morgan", "Casey", "Riley", "Cameron", "Jamie", "Drew", "Skyler", "Reese", "Quinn", "Avery", "Harper"];
 const LAST_INITIALS = ["B.", "R.", "M.", "T.", "K.", "S.", "L.", "P.", "W.", "G."];
 const PROVIDERS = ["Johnston", "Alvarez", "Mehta", "Caldwell", "Rosen"];
@@ -187,7 +192,7 @@ function buildTranscript(r) {
   const hr = r.datetime.getHours();
   const greet = hr < 12 ? "Good morning" : hr < 17 ? "Good afternoon" : "Good evening";
 
-  t.push({ s: "Agent", text: `If this is a medical emergency, please hang up and dial 911. ${greet}, this is Ava, the automated assistant at Dermatology of Boca. How can I help you today?` });
+  t.push({ s: "Agent", text: `If this is a medical emergency, please hang up and dial 911. ${greet}, this is ${AGENT_NAME}, the automated assistant at ${PRACTICE_NAME}. How can I help you today?` });
   t.push({ s: "Caller", text: INTENT_PHRASES[r.capability] });
 
   if (r.identityRequired) {
