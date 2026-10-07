@@ -322,7 +322,7 @@ function renderOverview(rows) {
     Transferred: "Handed to staff on request, out of scope, or a failed lookup.",
     Abandoned: "Caller hung up before the request finished.",
     Afterhours: "Office closed, routed to the afterhours line.",
-    Crashed: "Agent hung up before the request finished.",
+    Crashed: "Agent ended the call itself, before the request finished.",
   };
   document.getElementById("chart-outcome").innerHTML =
     stackedBar(outcomeData, { noLegend: true }) +

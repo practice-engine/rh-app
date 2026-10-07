@@ -78,7 +78,9 @@ const OUTCOME_LABELS = {
   Transferred: "Transferred to Staff",
   Abandoned: "Caller Abandoned",
   Afterhours: "Afterhours Transfer",
-  Crashed: "Agent Crashed",
+  /* The internal key stays "Crashed" so the outcome plumbing is
+     untouched; only the spoken-about label changes. */
+  Crashed: "Agent Hung Up",
 };
 
 /* Call quality indicators, grouped by severity. Critical issues need
