@@ -1,5 +1,5 @@
 /* ============================================================
-   Outbound Agent Report - rendering and interaction
+   Inbound Agent Report - rendering and interaction
    Depends on agent-activity-data.js
    ============================================================ */
 
