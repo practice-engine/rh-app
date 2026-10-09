@@ -802,27 +802,39 @@
 .scol-col:focus-visible {
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(245, 144, 31, 0.55);
 }
-/* The column is the control now that the "View calls" button is
-   gone, so it advertises itself on hover. */
-.scol-col-click { cursor: pointer; }
-.scol-col-click:hover {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(245, 144, 31, 0.45);
+/* Each coloured block is its own control, opening that capability
+   narrowed to the one outcome. The total above the column opens all
+   of its calls. */
+.scol-total-click {
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 0 3px;
 }
-.scol-col-click:hover .scol-total { color: var(--orange); }
-/* Segments are decoration inside the button, so pointer events fall
-   through to the column itself. */
-.scol-col-click .scol-seg { pointer-events: none; }
+.scol-total-click:hover,
+.scol-total-click:focus-visible {
+  color: var(--orange);
+  outline: none;
+  background: #fff5e9;
+}
 /* The column cannot clip overflow (the total label sits above it),
    so the top segment rounds its own corners instead. */
 .scol-seg {
+  position: relative;
   width: 100%;
   min-height: 2px;
   outline: none;
-  transition: opacity 0.12s;
+  cursor: pointer;
+  transition: filter 0.12s;
 }
 .scol-seg:first-of-type { border-radius: 3px 3px 0 0; }
+/* A ring rather than a fade: thin blocks washed out on hover read as
+   disabled, and the ring also survives on the 2px slivers. */
 .scol-seg:hover,
-.scol-seg:focus-visible { opacity: 0.75; }
+.scol-seg:focus-visible {
+  filter: brightness(1.12);
+  box-shadow: inset 0 0 0 2px #fff, 0 0 0 2px rgba(31, 41, 55, 0.55);
+  z-index: 1;
+}
 
 /* Label band sits below the plot, inside the chart's own height. */
 .scol-label {
@@ -1021,10 +1033,20 @@
 }
 .modal-wide { width: 1000px; }
 
-/* Calls list inside the quality-indicator modal. Fixed layout, same
-   as the main tables, so the header tracks the body columns. */
+/* Calls list modal. Fixed table layout, same as the main tables, so
+   the header tracks the body columns. */
+/* Scope chip in the subtitle: the capability group, or the single
+   outcome when a coloured block was selected. */
+.calls-modal-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
 .calls-modal-count {
-  margin-left: 10px;
+  margin-left: 12px;
   font-size: 12.5px;
   color: var(--text-muted);
 }

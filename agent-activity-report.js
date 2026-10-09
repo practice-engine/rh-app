@@ -519,16 +519,24 @@ function openQualityCallsModal(qiId, rows) {
   });
 }
 
-/* Opened by selecting a column on the Capabilities charts. */
-function openCapabilityCallsModal(capId, rows) {
+/* Opened from the Capabilities charts. With an outcome, this is a
+   single coloured block: that capability narrowed to the one way
+   those calls ended. Without, it is the whole column. */
+function openCapabilityCallsModal(capId, rows, outcome) {
   const cap = CAP_BY_ID[capId];
-  const matches = rows.filter((r) => r.capability === capId);
+  const matches = rows.filter(
+    (r) => r.capability === capId && (!outcome || r.outcome === outcome)
+  );
+  const scope = outcome
+    ? `<span class="calls-modal-group"><span class="dot" style="background:${OUTCOME_COLOR[outcome]}"></span>${esc(OUTCOME_LABELS[outcome])}</span>`
+    : `<span class="calls-modal-group"><span class="dot" style="background:${SERIES[cap.group]}"></span>${esc(cap.group)}</span>`;
   showCallsModal({
     title: cap.label,
-    subtitle: `<span class="calls-modal-group"><span class="dot" style="background:${SERIES[cap.group]}"></span>${esc(cap.group)}</span>
-      <span class="calls-modal-count">${fmtNum(matches.length)} call${matches.length === 1 ? "" : "s"}</span>`,
+    subtitle: `${scope}<span class="calls-modal-count">${fmtNum(matches.length)} call${matches.length === 1 ? "" : "s"}</span>`,
     matches,
-    emptyNote: "No calls for this capability in the current filter.",
+    emptyNote: outcome
+      ? "No calls ended this way for this capability in the current filter."
+      : "No calls for this capability in the current filter.",
   });
 }
 
@@ -579,21 +587,26 @@ function stackedColumnChart(items, opts) {
               return `
               <div class="scol-slot">
                 <div class="scol-colwrap">
-                  <div class="scol-col scol-col-click" style="height:${(it.total / max) * 100}%"
-                    tabindex="0" role="button"
-                    data-cap="${esc(it.id)}"
-                    aria-label="${tip}. Select to view these calls."
-                    data-tip="${tip} — select to view these calls">
-                    <div class="scol-total">${fmtNum(it.total)}</div>
+                  <div class="scol-col" style="height:${(it.total / max) * 100}%">
+                    <div class="scol-total scol-total-click"
+                      tabindex="0" role="button"
+                      data-cap="${esc(it.id)}"
+                      aria-label="${tip}. Select to view all of these calls."
+                      data-tip="${tip} — select for all ${fmtNum(it.total)} calls">${fmtNum(it.total)}</div>
                     ${mix
                       /* Drawn top-down, so the first outcome in the
-                         order sits at the bottom of the column. */
+                         order sits at the bottom of the column. Each
+                         block is its own control, opening just that
+                         capability-and-outcome slice. */
                       .slice()
                       .reverse()
                       .map((s) => {
                         const segTip = `${it.label} • ${s.label}: ${fmtNum(s.value)} of ${fmtNum(it.total)} (${((s.value / it.total) * 100).toFixed(1)}%)`;
                         return `<div class="scol-seg" style="height:${(s.value / it.total) * 100}%;background:${s.color}"
-                          role="presentation" data-tip="${segTip}"></div>`;
+                          tabindex="0" role="button"
+                          data-cap="${esc(it.id)}" data-outcome="${esc(s.outcome)}"
+                          aria-label="${segTip}. Select to view these calls."
+                          data-tip="${segTip} — select to view these calls"></div>`;
                       })
                       .join("")}
                   </div>
@@ -643,6 +656,7 @@ function renderCapabilities(rows) {
           good,
           rate: sub.length ? (good / sub.length) * 100 : 0,
           segments: OUTCOME_ORDER.map((o) => ({
+            outcome: o,
             label: OUTCOME_LABELS[o],
             value: sub.filter((r) => r.outcome === o).length,
             color: OUTCOME_COLOR[o],
@@ -684,12 +698,13 @@ function renderCapabilities(rows) {
     </div>
     <div class="scol-grid-outer">${charts}</div>`;
 
-  /* The column itself is the control: selecting one opens that
-     capability's calls, with Enter and Space for keyboard users. */
-  host.querySelectorAll(".scol-col-click").forEach((col) => {
-    const open = () => openCapabilityCallsModal(col.dataset.cap, rows);
-    col.addEventListener("click", open);
-    col.addEventListener("keydown", (e) => {
+  /* Two levels of drill-down: a coloured block opens that one
+     outcome for that capability, the total above the column opens
+     all of its calls. Both work by click and by Enter or Space. */
+  host.querySelectorAll("[data-cap]").forEach((el) => {
+    const open = () => openCapabilityCallsModal(el.dataset.cap, rows, el.dataset.outcome);
+    el.addEventListener("click", open);
+    el.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         open();
