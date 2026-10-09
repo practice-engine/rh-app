@@ -464,6 +464,22 @@ function buildInteractions(count) {
     };
     row.summary = CAP_SUMMARY[capability](row);
     row.transcript = outcome === "Abandoned" && rand() < 0.35 ? [] : buildTranscript(row);
+    /* Stamp each line with an offset from the start of the call.
+       Turn length scales with how much was said, then the whole set
+       is normalised so the last line lands inside the call duration
+       rather than drifting past it. */
+    if (row.transcript.length) {
+      const weights = row.transcript.map((l) => 1.4 + l.text.length / 22);
+      const span = weights.reduce((s, w) => s + w, 0);
+      /* Leave a beat at the end so the final line is not flush with
+         the hang-up moment. */
+      const usable = Math.max(1, duration - 2);
+      let acc = 0;
+      row.transcript.forEach((l, i) => {
+        l.t = Math.min(duration, Math.round((acc / span) * usable));
+        acc += weights[i];
+      });
+    }
     /* Flattened transcript text, so keyword search does not rebuild
        the string on every keystroke. */
     row.transcriptText = row.transcript.map((l) => l.text).join(" ").toLowerCase();

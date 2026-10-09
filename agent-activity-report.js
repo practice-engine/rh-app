@@ -220,7 +220,7 @@ function columnChart(days) {
     </div>
     <div class="legend stack-legend">
       <span class="legend-item"><span class="dot" style="background:var(--st-good)"></span>Handled by agent</span>
-      <span class="legend-item"><span class="dot" style="background:var(--s-practice)"></span>All other outcomes</span>
+      <span class="legend-item"><span class="dot" style="background:#b9c2cd"></span>All other outcomes</span>
     </div>`;
 }
 
@@ -438,7 +438,7 @@ function renderQualityIndicators(rows) {
      stakeholder can read the evidence without leaving the dashboard. */
   document.querySelectorAll("#qi-list .qi-count").forEach((el) => {
     el.addEventListener("click", () => {
-      if (!el.disabled) openCallsModal(el.dataset.qi, rows);
+      if (!el.disabled) openQualityCallsModal(el.dataset.qi, rows);
     });
   });
 }
@@ -446,14 +446,12 @@ function renderQualityIndicators(rows) {
 /* ------------------------------------------------------------
    Calls-list modal, opened from a quality indicator count
    ------------------------------------------------------------ */
-function openCallsModal(qiId, rows) {
-  const qi = QI_BY_ID[qiId];
-  const matches = rows.filter((r) => r.quality.includes(qiId));
-
-  document.getElementById("calls-modal-title").textContent = qi.label;
-  document.getElementById("calls-modal-sub").innerHTML =
-    `<span class="qi-chip qi-chip-${qi.sev}"><span class="qi-dot qi-dot-${qi.sev}"></span>${esc(SEVERITIES.find((s) => s.id === qi.sev).label)}</span>
-     <span class="calls-modal-count">${fmtNum(matches.length)} call${matches.length === 1 ? "" : "s"} flagged</span>`;
+/* Shared calls-list modal. Callers supply the title, a subtitle and
+   the already-filtered rows, so the same list serves a quality
+   indicator and a capability column. */
+function showCallsModal({ title, subtitle, matches, emptyNote }) {
+  document.getElementById("calls-modal-title").textContent = title;
+  document.getElementById("calls-modal-sub").innerHTML = subtitle;
 
   document.getElementById("calls-modal-body").innerHTML = matches.length
     ? `<table class="calls-mini-table">
@@ -487,8 +485,8 @@ function openCallsModal(qiId, rows) {
             .join("")}
         </tbody>
       </table>
-      ${matches.length > 60 ? `<p class="panel-note">Showing the 60 most recent of ${fmtNum(matches.length)} flagged calls.</p>` : ""}`
-    : `<div class="empty-note">No calls carry this indicator in the current filter.</div>`;
+      ${matches.length > 60 ? `<p class="panel-note">Showing the 60 most recent of ${fmtNum(matches.length)} calls.</p>` : ""}`
+    : `<div class="empty-note">${esc(emptyNote || "No calls match the current filter.")}</div>`;
 
   /* Drilling from this list into a single transcript swaps modals. */
   document.querySelectorAll("#calls-modal-body tr[data-id]").forEach((tr) => {
@@ -506,7 +504,34 @@ function closeCallsModal() {
   document.getElementById("calls-modal-overlay").classList.add("hidden");
 }
 
-/* ------------------------------------------------------------
+/* Opened from a quality indicator count on the Overview. */
+function openQualityCallsModal(qiId, rows) {
+  const qi = QI_BY_ID[qiId];
+  const matches = rows.filter((r) => r.quality.includes(qiId));
+  showCallsModal({
+    title: qi.label,
+    subtitle: `<span class="qi-chip qi-chip-${qi.sev}"><span class="qi-dot qi-dot-${qi.sev}"></span>${esc(
+      SEVERITIES.find((s) => s.id === qi.sev).label
+    )}</span>
+      <span class="calls-modal-count">${fmtNum(matches.length)} call${matches.length === 1 ? "" : "s"} flagged</span>`,
+    matches,
+    emptyNote: "No calls carry this indicator in the current filter.",
+  });
+}
+
+/* Opened by selecting a column on the Capabilities charts. */
+function openCapabilityCallsModal(capId, rows) {
+  const cap = CAP_BY_ID[capId];
+  const matches = rows.filter((r) => r.capability === capId);
+  showCallsModal({
+    title: cap.label,
+    subtitle: `<span class="calls-modal-group"><span class="dot" style="background:${SERIES[cap.group]}"></span>${esc(cap.group)}</span>
+      <span class="calls-modal-count">${fmtNum(matches.length)} call${matches.length === 1 ? "" : "s"}</span>`,
+    matches,
+    emptyNote: "No calls for this capability in the current filter.",
+  });
+}
+
 /* Nice round axis maximum and a tick step that lands on clean
    numbers, so gridlines read as 0 / 90 / 180 rather than 0 / 84. */
 function axisScale(peak, ticks) {
@@ -554,8 +579,11 @@ function stackedColumnChart(items, opts) {
               return `
               <div class="scol-slot">
                 <div class="scol-colwrap">
-                  <div class="scol-col" style="height:${(it.total / max) * 100}%"
-                    tabindex="0" role="img" aria-label="${tip}" data-tip="${tip}">
+                  <div class="scol-col scol-col-click" style="height:${(it.total / max) * 100}%"
+                    tabindex="0" role="button"
+                    data-cap="${esc(it.id)}"
+                    aria-label="${tip}. Select to view these calls."
+                    data-tip="${tip} — select to view these calls">
                     <div class="scol-total">${fmtNum(it.total)}</div>
                     ${mix
                       /* Drawn top-down, so the first outcome in the
@@ -565,7 +593,7 @@ function stackedColumnChart(items, opts) {
                       .map((s) => {
                         const segTip = `${it.label} • ${s.label}: ${fmtNum(s.value)} of ${fmtNum(it.total)} (${((s.value / it.total) * 100).toFixed(1)}%)`;
                         return `<div class="scol-seg" style="height:${(s.value / it.total) * 100}%;background:${s.color}"
-                          tabindex="0" role="img" aria-label="${segTip}" data-tip="${segTip}"></div>`;
+                          role="presentation" data-tip="${segTip}"></div>`;
                       })
                       .join("")}
                   </div>
@@ -576,8 +604,7 @@ function stackedColumnChart(items, opts) {
             .join("")}
         </div>
       </div>
-    </div>
-    ${o.footNote ? `<div class="scol-foot">${o.footNote}</div>` : ""}`;
+    </div>`;
 }
 
 /* ------------------------------------------------------------
@@ -610,6 +637,7 @@ function renderCapabilities(rows) {
         const tr = sub.filter((r) => r.outcome === "Transferred").length;
         const good = transferIsSuccess ? done + tr : done;
         return {
+          id: c.id,
           label: c.label,
           total: sub.length,
           good,
@@ -637,19 +665,8 @@ function renderCapabilities(rows) {
               ${pctStr(groupGood, groupRows.length)} ${transferIsSuccess ? "handled correctly" : "resolved by agent"}
             </div>
           </div>
-          <div class="scol-head-right">
-            <span class="capgroup-id ${identity ? "id-on" : "id-off"}"
-              data-tip="${identity ? "Name and date of birth are required before the agent can act on these requests." : "These requests are answered without verifying patient identity."}">
-              ${identity ? "ID required" : "no ID"}
-            </span>
-            <button class="link-btn" data-drill-group="${esc(g)}">View calls</button>
-          </div>
         </div>
-        ${stackedColumnChart(items, {
-          footNote: transferIsSuccess
-            ? "For these requests, transferring the caller to staff is the correct outcome."
-            : "",
-        })}
+        ${stackedColumnChart(items)}
       </section>`;
   }).join("");
 
@@ -667,12 +684,16 @@ function renderCapabilities(rows) {
     </div>
     <div class="scol-grid-outer">${charts}</div>`;
 
-  host.querySelectorAll("[data-drill-group]").forEach((b) => {
-    b.addEventListener("click", (e) => {
-      e.stopPropagation();
-      document.getElementById("f-group").value = b.dataset.drillGroup;
-      switchTab("log");
-      refresh();
+  /* The column itself is the control: selecting one opens that
+     capability's calls, with Enter and Space for keyboard users. */
+  host.querySelectorAll(".scol-col-click").forEach((col) => {
+    const open = () => openCapabilityCallsModal(col.dataset.cap, rows);
+    col.addEventListener("click", open);
+    col.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open();
+      }
     });
   });
 }
@@ -769,17 +790,28 @@ function openModal(id) {
   document.getElementById("modal-meta").textContent =
     `${fmtDateTime(r.datetime)} • ${fmtDuration(r.duration)} • ${r.contact}`;
   document.getElementById("modal-capability").textContent = cap.label;
-  document.getElementById("modal-capability-ref").textContent = `${r.group} • spec ${cap.ref}`;
-  document.getElementById("modal-outcome").textContent = OUTCOME_LABELS[r.outcome];
-  document.getElementById("modal-sentiment").textContent = r.sentiment;
+  document.getElementById("modal-capability-ref").textContent = r.group;
+  /* Outcome and sentiment read as states, so they take the same pills
+     used in the log rather than plain text. */
+  document.getElementById("modal-outcome").innerHTML = outcomePill(r.outcome);
+  document.getElementById("modal-sentiment").innerHTML =
+    `<span class="sent-chip sent-${r.sentiment.toLowerCase()}">${esc(r.sentiment)}</span>`;
+
+  /* Header carries the at-a-glance verdict: how it ended, and whether
+     anything on the call needs a human to look at it. */
+  const critical = r.quality.filter((q) => QI_BY_ID[q].sev === "critical").length;
+  document.getElementById("modal-head-tags").innerHTML =
+    outcomePill(r.outcome) +
+    (r.quality.length
+      ? `<span class="status-chip ${critical ? "chip-fail" : "chip-warn"}">${r.quality.length} quality flag${r.quality.length > 1 ? "s" : ""}</span>`
+      : '<span class="status-chip chip-pass">Clean call</span>');
 
   const idEl = document.getElementById("modal-identity");
-  idEl.textContent = r.identityRequired
+  idEl.innerHTML = r.identityRequired
     ? r.identityVerified
-      ? `Verified${r.newPatient ? " (new patient)" : ""}`
-      : "Not verified"
-    : "Not required";
-  idEl.className = "modal-info-value " + (r.identityRequired ? (r.identityVerified ? "val-good" : "val-bad") : "val-muted");
+      ? `<span class="status-chip chip-pass">Verified</span>${r.newPatient ? '<span class="tag-new">New patient</span>' : ""}`
+      : '<span class="status-chip chip-fail">Not verified</span>'
+    : '<span class="status-chip chip-neutral">Not required</span>';
 
   /* Patient record, only where the caller was actually identified. */
   const rec = document.getElementById("modal-patient-record");
@@ -814,11 +846,15 @@ function openModal(id) {
 
   const tb = document.getElementById("modal-transcript");
   const kw = document.getElementById("f-keyword").value.trim();
+  document.getElementById("modal-transcript-meta").textContent = r.transcript.length
+    ? `${r.transcript.length} turns • ${fmtDuration(r.duration)}`
+    : "";
   tb.innerHTML = r.transcript.length
     ? r.transcript
         .map(
           (l) => `
       <div class="transcript-line transcript-${l.s.toLowerCase()}">
+        <span class="transcript-time">${fmtDuration(l.t || 0)}</span>
         <span class="transcript-speaker">${esc(l.s)}</span>
         <span class="transcript-text">${highlight(l.text, kw)}</span>
       </div>`

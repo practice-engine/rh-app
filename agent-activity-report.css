@@ -408,10 +408,15 @@
   justify-content: center;
   min-height: 0;
 }
+/* The "all other outcomes" remainder is a quiet neutral rather than
+   a second saturated hue. Green on teal measured 1.82:1, so the
+   boundary between the two parts was nearly invisible; green on this
+   neutral is 2.48:1 and separates clearly under colourblind vision
+   too (normal-vision dE 19.7). */
 .col-bar-total {
   width: 72%;
   max-width: 34px;
-  background: var(--s-practice);
+  background: #b9c2cd;
   border-radius: 4px 4px 0 0;
   display: flex;
   flex-direction: column;
@@ -618,23 +623,37 @@
 /* One chart per capability group, one stacked column per
    capability. The outcome legend sits once above all the charts,
    since every chart shares the same encoding. */
+/* The legend is the key to every chart below it, so it is given a
+   tinted ground and a left accent rather than sitting as another
+   white card among white cards. */
 .scol-legendbar {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
   flex-wrap: wrap;
-  background: #fff;
-  border: 1px solid var(--border);
+  background: #f2f4f7;
+  border: 1px solid #dfe3e9;
+  border-left: 4px solid var(--chart-1);
   border-radius: 6px;
-  padding: 12px 18px;
-  margin-bottom: 16px;
+  padding: 13px 18px;
+  margin-bottom: 18px;
 }
 .scol-legendbar-label {
   font-size: 11px;
   font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.3px;
+  color: var(--text-dark);
+  letter-spacing: 0.5px;
   text-transform: uppercase;
+}
+.scol-legendbar .legend-item {
+  font-size: 12.5px;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+.scol-legendbar .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
 }
 .scol-legend {
   display: flex;
@@ -683,12 +702,6 @@
   color: var(--text-muted);
   margin-top: 5px;
   padding-left: 18px;
-}
-.scol-head-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
 }
 
 /* Axis gutter + plot. The container height includes the label band,
@@ -789,6 +802,16 @@
 .scol-col:focus-visible {
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(245, 144, 31, 0.55);
 }
+/* The column is the control now that the "View calls" button is
+   gone, so it advertises itself on hover. */
+.scol-col-click { cursor: pointer; }
+.scol-col-click:hover {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(245, 144, 31, 0.45);
+}
+.scol-col-click:hover .scol-total { color: var(--orange); }
+/* Segments are decoration inside the button, so pointer events fall
+   through to the column itself. */
+.scol-col-click .scol-seg { pointer-events: none; }
 /* The column cannot clip overflow (the total label sits above it),
    so the top segment rounds its own corners instead. */
 .scol-seg {
@@ -815,26 +838,6 @@
   -webkit-box-orient: vertical;
   word-break: break-word;
 }
-
-.scol-foot {
-  font-size: 11px;
-  color: var(--text-muted);
-  font-style: italic;
-  line-height: 1.5;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-.capgroup-id {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 9px;
-  white-space: nowrap;
-}
-.capgroup-id.id-on { background: #e9f2fe; color: #0b5fc0; }
-.capgroup-id.id-off { background: #f1f2f4; color: var(--text-muted); }
 
 .cap-name { font-weight: 600; color: var(--text-dark); }
 .cap-ref {
@@ -1080,20 +1083,6 @@
   cursor: pointer;
 }
 .modal-body { padding: 20px 24px 24px; }
-.modal-info-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 22px;
-}
-@media (max-width: 760px) {
-  .modal-info-grid { grid-template-columns: repeat(2, 1fr); }
-}
-.modal-info-box {
-  background: #f7f8fa;
-  border-radius: 6px;
-  padding: 10px 12px;
-}
 .info-label {
   font-size: 10.5px;
   font-weight: 700;
@@ -1107,9 +1096,6 @@
   color: var(--text-dark);
   line-height: 1.35;
 }
-.val-good { color: #137a36; }
-.val-bad { color: #a8162c; }
-.val-muted { color: var(--text-muted); font-weight: 600; }
 
 .modal-section { margin-bottom: 22px; }
 .modal-section:last-child { margin-bottom: 0; }
@@ -1118,12 +1104,6 @@
   color: var(--text-dark);
   margin: 7px 0 0;
   line-height: 1.55;
-}
-.modal-fineprint {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin: 6px 0 0;
-  font-style: italic;
 }
 .modal-kv {
   display: grid;
@@ -1164,9 +1144,18 @@
 }
 .transcript-line {
   display: grid;
-  grid-template-columns: 56px 1fr;
+  grid-template-columns: 42px 56px 1fr;
   gap: 10px;
   margin-bottom: 9px;
+}
+/* Elapsed time from the start of the call, tabular so the column
+   stays straight as the digits change. */
+.transcript-time {
+  font-size: 10.5px;
+  color: #9298a3;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding-top: 2px;
 }
 .transcript-line:last-child { margin-bottom: 0; }
 .transcript-speaker {
@@ -1188,4 +1177,128 @@
   color: inherit;
   border-radius: 2px;
   padding: 0 2px;
+}
+
+/* ---------- Call detail modal: two-pane layout ----------
+   Facts on the left, conversation on the right. Previously six
+   equal-weight stacked sections pushed the transcript - the thing
+   the modal is opened for - below the fold. */
+.modal-call {
+  width: 1120px;
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal-call .modal-header {
+  align-items: center;
+  gap: 18px;
+  position: static;
+  flex-shrink: 0;
+}
+.modal-head-main { min-width: 0; }
+.modal-head-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.modal-split {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  min-height: 0;
+  flex: 1;
+}
+.modal-side {
+  border-right: 1px solid var(--border);
+  background: #fbfcfd;
+  padding: 18px 20px 22px;
+  overflow-y: auto;
+}
+.modal-main {
+  padding: 18px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+@media (max-width: 1000px) {
+  .modal-split { grid-template-columns: minmax(0, 1fr); }
+  .modal-side { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+.side-block {
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eceff3;
+}
+.side-block:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+.side-head {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+.side-identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.side-note {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  font-style: italic;
+}
+.side-block .modal-kv {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin-top: 10px;
+}
+.side-block .modal-summary { margin-top: 0; }
+
+.chip-neutral { background: #eef0f3; color: #4f5663; }
+
+.sent-chip {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 12px;
+}
+.sent-positive { background: #e6f6f0; color: #0d6b54; }
+.sent-neutral  { background: #eef0f3; color: #4f5663; }
+.sent-negative { background: #fbe4e4; color: #96172e; }
+
+.transcript-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.transcript-head .side-head { margin-bottom: 0; }
+.transcript-meta {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+/* The transcript owns the remaining height and scrolls on its own,
+   so the facts pane stays put while reading a long call. */
+.modal-main .transcript-box {
+  margin-top: 0;
+  flex: 1;
+  max-height: none;
+  min-height: 0;
+  overflow-y: auto;
 }

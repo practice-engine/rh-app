@@ -65,7 +65,6 @@
           <h1>OUTBOUND AGENT REPORT</h1>
           <div class="header-links">
             <a href="#" class="link-underline" id="clear-filters">Clear Filters</a>
-            <a href="#" class="link-export">&#8677; Export CSV</a>
           </div>
         </div>
 
@@ -214,7 +213,7 @@
             <section class="panel">
               <div class="panel-title-row">
                 <div>
-                  <div class="panel-title">Call Quality Indicators</div>
+                  <div class="panel-title">Conversation Quality Indicators</div>
                   <div class="panel-sub">Issues detected across all calls</div>
                 </div>
               </div>
@@ -293,60 +292,59 @@
 
   <!-- Call detail modal -->
   <div class="modal-overlay hidden" id="aa-modal-overlay">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-patient">
+    <div class="modal modal-call" role="dialog" aria-modal="true" aria-labelledby="modal-patient">
       <div class="modal-header">
-        <div>
+        <div class="modal-head-main">
           <div class="modal-title" id="modal-patient">Patient Name</div>
           <div class="modal-subtitle" id="modal-meta"></div>
         </div>
+        <div class="modal-head-tags" id="modal-head-tags"></div>
         <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
       </div>
-      <div class="modal-body">
-        <div class="modal-info-grid">
-          <div class="modal-info-box">
-            <div class="info-label">CAPABILITY</div>
-            <div class="modal-info-value" id="modal-capability"></div>
-            <div class="cap-ref" id="modal-capability-ref"></div>
+
+      <!-- Facts on the left, the conversation on the right. The
+           transcript is what people open this for, so it gets the
+           larger pane and its own scroll. -->
+      <div class="modal-split">
+        <aside class="modal-side">
+          <section class="side-block">
+            <h4 class="side-head">Call</h4>
+            <div class="kv"><span class="kv-k">Capability</span><span class="kv-v" id="modal-capability"></span></div>
+            <div class="kv"><span class="kv-k">Group</span><span class="kv-v" id="modal-capability-ref"></span></div>
+            <div class="kv"><span class="kv-k">Outcome</span><span class="kv-v" id="modal-outcome"></span></div>
+            <div class="kv"><span class="kv-k">Sentiment</span><span class="kv-v" id="modal-sentiment"></span></div>
+          </section>
+
+          <section class="side-block">
+            <h4 class="side-head">Patient Identity</h4>
+            <div class="side-identity" id="modal-identity"></div>
+            <div class="side-note" id="modal-identity-note"></div>
+            <div class="modal-kv" id="modal-patient-record"></div>
+          </section>
+
+          <section class="side-block">
+            <h4 class="side-head">What the agent did</h4>
+            <p class="modal-summary" id="modal-summary"></p>
+          </section>
+
+          <section class="side-block">
+            <h4 class="side-head">Conversation quality</h4>
+            <div id="modal-quality"></div>
+          </section>
+
+          <section class="side-block">
+            <h4 class="side-head">Text confirmation</h4>
+            <div class="modal-summary" id="modal-sms"></div>
+          </section>
+        </aside>
+
+        <section class="modal-main">
+          <div class="transcript-head">
+            <h4 class="side-head">Transcript</h4>
+            <span class="transcript-meta" id="modal-transcript-meta"></span>
           </div>
-          <div class="modal-info-box">
-            <div class="info-label">OUTCOME</div>
-            <div class="modal-info-value" id="modal-outcome"></div>
-          </div>
-          <div class="modal-info-box">
-            <div class="info-label">IDENTITY</div>
-            <div class="modal-info-value" id="modal-identity"></div>
-          </div>
-          <div class="modal-info-box">
-            <div class="info-label">SENTIMENT</div>
-            <div class="modal-info-value" id="modal-sentiment"></div>
-          </div>
-        </div>
-
-        <div class="modal-section" id="modal-patient-section">
-          <div class="info-label">PATIENT RECORD</div>
-          <div class="modal-kv" id="modal-patient-record"></div>
-        </div>
-
-        <div class="modal-section">
-          <div class="info-label">WHAT THE AGENT DID</div>
-          <p class="modal-summary" id="modal-summary"></p>
-          <p class="modal-fineprint" id="modal-identity-note"></p>
-        </div>
-
-        <div class="modal-section">
-          <div class="info-label">CALL QUALITY</div>
-          <div id="modal-quality"></div>
-        </div>
-
-        <div class="modal-section">
-          <div class="info-label">TEXT CONFIRMATION</div>
-          <div class="modal-summary" id="modal-sms"></div>
-        </div>
-
-        <div class="modal-section">
-          <div class="info-label">TRANSCRIPT</div>
           <div class="transcript-box" id="modal-transcript"></div>
-        </div>
+        </section>
       </div>
     </div>
   </div>
