@@ -163,7 +163,7 @@
     if (TYPE !== "mixed") return;
 
     var name = document.querySelector("[data-cb-type-name]");
-    if (name) name.textContent = "Mixed (Advanced Scheduling)";
+    if (name) name.textContent = "Advanced Scheduling";
 
     var summary = "";
     var count = "";
