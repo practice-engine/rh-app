@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campaign Builder - Configurations</title>
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="campaign-builder.css" />
+<script>window.CB_STEP = 4;</script>
+</head>
+<body>
+  <div class="cb-shell">
+    <h2 class="cb-panel-title"><span class="cb-panel-num">5</span>Appointment Type Campaign Configurations</h2>
+
+    <div class="cb-fieldset">
+      <h4>Target appointment types</h4>
+      <p class="cb-fs-desc">Which appointment types should be included or excluded from this campaign?</p>
+      <p class="cb-fs-hint">Optional - Leave empty to include all appointment types</p>
+
+      <div class="cb-tabs">
+        <button type="button" class="cb-tab is-active">&#10003; Include (2)</button>
+        <button type="button" class="cb-tab">&#10005; Exclude (0)</button>
+      </div>
+
+      <div class="cb-search">
+        <span class="cb-s-icon">&#128269;&#65038;</span>
+        <input type="text" id="cb-appt-search" placeholder="Search appointment types" autocomplete="off" />
+      </div>
+
+      <div class="cb-optlist" id="cb-appt-list" hidden>
+        <label class="cb-opt"><input type="checkbox" class="cb-check" /> 1064</label>
+        <label class="cb-opt"><input type="checkbox" class="cb-check" /> 1540</label>
+        <label class="cb-opt"><input type="checkbox" class="cb-check" checked /> Acleara</label>
+        <label class="cb-opt"><input type="checkbox" class="cb-check" checked /> Acne Follow up</label>
+        <label class="cb-opt"><input type="checkbox" class="cb-check" /> Acne Follow up - 15</label>
+        <label class="cb-opt"><input type="checkbox" class="cb-check" /> Acne Surgery</label>
+        <label class="cb-opt"><input type="checkbox" class="cb-check" /> Allergy Patch Test</label>
+        <label class="cb-opt"><input type="checkbox" class="cb-check" /> Biopsy</label>
+      </div>
+
+      <div class="cb-chipbox" id="cb-appt-chips">
+        <div class="cb-chipbox-top">
+          <span class="cb-chipbox-label">&#10003; 2 APPOINTMENT TYPES INCLUDED</span>
+          <button type="button" class="cb-clear-all" id="cb-clear-appts">&#10005; Clear All</button>
+        </div>
+        <div class="cb-chips">
+          <span class="cb-chip">Acleara <button type="button" data-rmchip>&#10005;</button></span>
+          <span class="cb-chip">Acne Follow up <button type="button" data-rmchip>&#10005;</button></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb-fieldset">
+      <h4>Lookback period</h4>
+      <p class="cb-fs-desc">Date range for how far back should we look for appointment records</p>
+      <div class="cb-two-col">
+        <div>
+          <label class="cb-label">Lookback start <span class="cb-req">*</span><span class="cb-info-dot">i</span></label>
+          <div class="cb-select-wrap" style="max-width:none">
+            <select class="cb-select"><option>Jan 01, 2019</option></select>
+          </div>
+        </div>
+        <div>
+          <label class="cb-label">Lookback end <span class="cb-req">*</span><span class="cb-info-dot">i</span></label>
+          <div class="cb-select-wrap" style="max-width:none">
+            <select class="cb-select"><option>Nov 23, 2025</option></select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb-fieldset">
+      <h4>Include specific patients</h4>
+      <p class="cb-fs-desc">Add individual patients who should receive this appointment-based campaign</p>
+      <div class="cb-tabs">
+        <button type="button" class="cb-tab is-active">&#128269;&#65038; Search &amp; Add Patient</button>
+        <button type="button" class="cb-tab">&#128196; Upload CSV</button>
+      </div>
+      <div class="cb-search trailing">
+        <span class="cb-s-icon">&#128269;&#65038;</span>
+        <input type="text" placeholder="Search patients by name and MRN (type minimum 3 characters)" autocomplete="off" />
+      </div>
+    </div>
+
+    <div class="cb-target">
+      <div class="cb-target-label">&#128200;&#65038; CAMPAIGN TARGET</div>
+      <p>Patients with <b>2 selected appointment types</b> last seen within <b>Jan 1, 2019</b>, and <b>Nov 23, 2025</b>.</p>
+    </div>
+
+    <div class="cb-foot">
+      <a class="cb-btn-back" href="step-4-providers.html">&#10094; Back to Providers</a>
+      <a class="cb-btn-next" href="step-6-workflow.html">Continue to Workflow &#10230;</a>
+    </div>
+  </div>
+
+  <script src="campaign-builder.js"></script>
+</body>
+</html>

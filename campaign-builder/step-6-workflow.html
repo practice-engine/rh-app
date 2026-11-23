@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campaign Builder - Workflow</title>
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="campaign-builder.css" />
+<script>window.CB_STEP = 5;</script>
+</head>
+<body>
+  <div class="cb-shell">
+    <div class="cb-wf-head">
+      <h2 class="cb-panel-title" style="margin:0"><span class="cb-panel-num">6</span>Workflow</h2>
+      <a href="#" class="cb-wf-link">Delivery settings</a>
+    </div>
+
+    <div class="cb-info" style="margin-top:0;border-left:4px solid #4a90d9;border-radius:0 8px 8px 0">
+      <span class="cb-i-icon">i</span>
+      <span><b>Fallback Order</b> - Only one contact method will be attempted. If the first
+      method fails, the system will automatically try the next method in priority order.</span>
+    </div>
+
+    <div class="cb-wf-step" style="margin-top:22px">
+      <div class="cb-wf-step-top">
+        <span class="cb-wf-step-num">1</span>
+        <span class="cb-wf-step-title">Step 1: Initial Outreach</span>
+        <button type="button" class="cb-icon-btn">&#9998;</button>
+      </div>
+
+      <div class="cb-channel email">
+        <span class="cb-channel-icon">&#9993;</span>
+        <div class="cb-channel-body">
+          <div class="cb-channel-name">Email</div>
+          <div class="cb-channel-desc">No default template found for current configuration.</div>
+        </div>
+        <div class="cb-channel-actions">
+          <button type="button" class="cb-preview-btn">&#128065;&#65038; Preview</button>
+          <button type="button" class="cb-icon-btn">&#9998;</button>
+          <button type="button" class="cb-icon-btn">&#128465;&#65038;</button>
+          <span class="cb-grip">&#8942;&#8942;</span>
+        </div>
+      </div>
+
+      <div class="cb-channel text">
+        <span class="cb-channel-icon">&#128172;</span>
+        <div class="cb-channel-body">
+          <div class="cb-channel-name">Text</div>
+          <div class="cb-channel-desc">No default template found for current configuration.</div>
+        </div>
+        <div class="cb-channel-actions">
+          <button type="button" class="cb-preview-btn">&#128065;&#65038; Preview</button>
+          <button type="button" class="cb-icon-btn">&#9998;</button>
+          <button type="button" class="cb-icon-btn">&#128465;&#65038;</button>
+          <span class="cb-grip">&#8942;&#8942;</span>
+        </div>
+      </div>
+
+      <button type="button" class="cb-add-channel">&#43; Add Contact Method</button>
+    </div>
+
+    <button type="button" class="cb-add-step">&#43; Add Next Step</button>
+
+    <div class="cb-foot">
+      <a class="cb-btn-back" href="step-5-configurations.html">&#10094; Edit Configurations</a>
+      <a class="cb-btn-next is-disabled" href="step-7-review.html">Review Campaign &#10230;</a>
+    </div>
+  </div>
+
+  <script src="campaign-builder.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campaign Builder - Campaign Type</title>
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="campaign-builder.css" />
+<script>window.CB_STEP = 0;</script>
+</head>
+<body>
+  <div class="cb-shell">
+    <h2 class="cb-panel-title"><span class="cb-panel-num">1</span>Campaign Type</h2>
+
+    <div class="cb-group scheduling">Scheduling Campaigns</div>
+    <div class="cb-type-grid">
+      <a class="cb-type-card scheduling" href="step-2-practice.html">
+        <span class="cb-type-icon">&#128100;</span>
+        <h3>No-Shows</h3>
+        <p>Re-engage patients who missed appointments</p>
+      </a>
+      <a class="cb-type-card scheduling" href="step-2-practice.html">
+        <span class="cb-type-icon">&#128197;</span>
+        <h3>Cancellations</h3>
+        <p>Recover cancelled appointments and reschedule</p>
+      </a>
+      <span class="cb-type-card scheduling is-muted">
+        <span class="cb-type-icon">&#128336;</span>
+        <h3>Waitlist</h3>
+        <p>Notify patients when appointment slots open</p>
+      </span>
+      <a class="cb-type-card scheduling" href="step-2-practice.html?type=mixed">
+        <span class="cb-type-icon">&#9881;&#65038;</span>
+        <h3>Mixed</h3>
+        <p>Build custom eligibility rules from procedures, diagnoses and future appointments</p>
+      </a>
+    </div>
+
+    <div class="cb-group clinical">Clinical Campaigns</div>
+    <div class="cb-type-grid">
+      <a class="cb-type-card clinical" href="step-2-practice.html">
+        <span class="cb-type-icon">&#129658;</span>
+        <h3>Diagnosis Based</h3>
+        <p>Target patients based on specific diagnoses</p>
+      </a>
+      <a class="cb-type-card clinical" href="step-2-practice.html">
+        <span class="cb-type-icon">&#128197;</span>
+        <h3>Appointment Type</h3>
+        <p>Reach patients based on appointment history</p>
+      </a>
+      <a class="cb-type-card clinical" href="step-2-practice.html">
+        <span class="cb-type-icon">&#127973;</span>
+        <h3>Procedure Based</h3>
+        <p>Follow-up after specific procedures</p>
+      </a>
+      <span class="cb-type-card clinical is-muted">
+        <span class="cb-type-icon">&#128100;</span>
+        <h3>Melanoma Follow-ups</h3>
+        <p>Quality measures for melanoma tracking</p>
+      </span>
+    </div>
+
+    <!-- Card labels for this group are cut off in ref/campaign-builder/1.jpg -->
+    <div class="cb-group communication">Communication Campaigns</div>
+    <div class="cb-type-grid">
+      <a class="cb-type-card communication" href="step-2-practice.html">
+        <span class="cb-type-icon">&#9993;</span>
+        <h3></h3>
+        <p></p>
+      </a>
+      <a class="cb-type-card communication" href="step-2-practice.html">
+        <span class="cb-type-icon">&#9993;</span>
+        <h3></h3>
+        <p></p>
+      </a>
+      <a class="cb-type-card communication" href="step-2-practice.html">
+        <span class="cb-type-icon">&#128172;</span>
+        <h3></h3>
+        <p></p>
+      </a>
+    </div>
+  </div>
+
+  <script src="campaign-builder.js"></script>
+</body>
+</html>

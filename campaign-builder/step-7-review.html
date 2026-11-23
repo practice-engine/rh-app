@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campaign Builder - Review</title>
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="campaign-builder.css" />
+<script>window.CB_STEP = 6;</script>
+</head>
+<body>
+  <div class="cb-shell">
+    <h2 class="cb-panel-title"><span class="cb-panel-num">7</span>Review</h2>
+
+    <h3 class="cb-review-sub">Campaign details</h3>
+    <div class="cb-review-form">
+      <div>
+        <label class="cb-label">Campaign title <span class="cb-req">*</span></label>
+        <input type="text" class="cb-input" placeholder="Enter campaign title" />
+      </div>
+      <div>
+        <label class="cb-label">Recall Health Fee <span class="cb-req">*</span></label>
+        <input type="text" class="cb-input" value="$12" />
+      </div>
+      <div>
+        <label class="cb-label">Billing Cycle</label>
+        <div class="cb-billing-toggle">
+          <button type="button" class="is-active" data-billing>Current</button>
+          <button type="button" data-billing>Next</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb-kv-grid">
+      <dl class="cb-kv"><dt>Campaign Type</dt><dd data-cb-type-name>Appointment Type</dd></dl>
+      <dl class="cb-kv"><dt>Practice</dt><dd>Charles County Dermatology Associates</dd></dl>
+      <dl class="cb-kv"><dt>Eligible Patients</dt><dd><u>294</u></dd></dl>
+      <dl class="cb-kv"><dt>Recall Health Fee</dt><dd>$12</dd></dl>
+      <dl class="cb-kv"><dt>Locations</dt><dd>White Plains</dd></dl>
+      <dl class="cb-kv"><dt>Providers</dt><dd>Dr. Christopher Dolan, MD, Jacob Aja, PA-C, LUXV 1 LUXV 1</dd></dl>
+    </div>
+
+    <div class="cb-target" data-cb-target>
+      <div class="cb-target-label">&#128200;&#65038; CAMPAIGN TARGET</div>
+      <p>Patients with <b>2 selected appointment types</b> last seen within <b>Jan 1, 2019</b>, and <b>Nov 23, 2025</b>.</p>
+    </div>
+
+    <div class="cb-note">
+      <b>Note:</b> <i>We do not contact minor patients and patients marked as inactive or
+      deceased in your system.</i>
+    </div>
+
+    <h3 class="cb-timeline-title">Campaign timeline</h3>
+    <div class="cb-timeline">
+      <div class="cb-tl-row">
+        <span class="cb-tl-dot">&#9654;</span>
+        <div class="cb-tl-card"><b>Campaign Start</b><span>When campaign is created</span></div>
+      </div>
+      <div class="cb-tl-row">
+        <span class="cb-tl-dot">&#9654;</span>
+        <div class="cb-tl-card"><b>Step 1: Initial Outreach</b><span>Email, Text</span></div>
+      </div>
+    </div>
+
+    <div class="cb-foot">
+      <a class="cb-btn-back" href="step-6-workflow.html">&#10094; Back to Workflow</a>
+      <a class="cb-btn-next" href="../campaign-overview.html">Create Campaign &#10230;</a>
+    </div>
+  </div>
+
+  <script src="campaign-builder.js"></script>
+</body>
+</html>

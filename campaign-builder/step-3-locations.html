@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Campaign Builder - Locations</title>
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="campaign-builder.css" />
+<script>window.CB_STEP = 2;</script>
+</head>
+<body>
+  <div class="cb-shell">
+    <h2 class="cb-panel-title"><span class="cb-panel-num">3</span>Location Selection</h2>
+
+    <label class="cb-select-all">
+      <input type="checkbox" class="cb-check" data-select-all checked />
+      SELECT ALL LOCATIONS (1 total)
+    </label>
+
+    <div class="cb-pick-grid">
+      <label class="cb-pick is-selected">
+        <span class="cb-pick-tick">&#10003;</span>
+        <span class="cb-pick-top">
+          <input type="checkbox" class="cb-check" checked />
+          <span class="cb-pick-name">White Plains</span>
+        </span>
+        <span class="cb-badge active">&#10003; Active</span>
+      </label>
+    </div>
+
+    <div class="cb-info">
+      <span class="cb-i-icon">i</span>
+      It is recommended to select patients assigned to inactive locations so they can be
+      recalled and scheduled at active locations.
+    </div>
+
+    <div class="cb-foot">
+      <a class="cb-btn-back" href="step-2-practice.html">&#10094; Back to Practice</a>
+      <a class="cb-btn-next" href="step-4-providers.html">Continue to Providers &#10230;</a>
+    </div>
+  </div>
+
+  <script src="campaign-builder.js"></script>
+</body>
+</html>
