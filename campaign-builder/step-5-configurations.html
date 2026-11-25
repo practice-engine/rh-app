@@ -68,6 +68,157 @@
         </div>
       </div>
     </div>
+    <div class="cb-fieldset">
+      <h4>Patient filters</h4>
+      <p class="cb-fs-desc">Exclude patients who should not be contacted, and control how patient consent is applied</p>
+
+      <div class="cb-filters">
+        <div class="cb-filter-row">
+          <div class="cb-filter-text">
+            <div class="cb-filter-name">Exclude minors <span class="cb-info-dot">i</span></div>
+            <p class="cb-filter-sub">Leave out patients under 18 years of age</p>
+          </div>
+          <label class="cb-switch">
+            <input type="checkbox" data-filter="minors" checked />
+            <span class="cb-switch-track"></span>
+          </label>
+        </div>
+
+        <div class="cb-filter-row">
+          <div class="cb-filter-text">
+            <div class="cb-filter-name">Exclude patients aged over 90 <span class="cb-info-dot">i</span></div>
+            <p class="cb-filter-sub">Leave out patients older than 90 years of age</p>
+          </div>
+          <label class="cb-switch">
+            <input type="checkbox" data-filter="over90" checked />
+            <span class="cb-switch-track"></span>
+          </label>
+        </div>
+
+        <div class="cb-filter-row">
+          <div class="cb-filter-text">
+            <div class="cb-filter-name">Exclude patients in collections <span class="cb-info-dot">i</span></div>
+            <p class="cb-filter-sub">Leave out patients with an account in collections</p>
+          </div>
+          <label class="cb-switch">
+            <input type="checkbox" data-filter="collections" checked />
+            <span class="cb-switch-track"></span>
+          </label>
+        </div>
+
+        <div class="cb-filter-row">
+          <div class="cb-filter-text">
+            <div class="cb-filter-name">Exclude inactive patients <span class="cb-info-dot">i</span></div>
+            <p class="cb-filter-sub">Leave out patients marked inactive in the chart</p>
+          </div>
+          <label class="cb-switch">
+            <input type="checkbox" data-filter="inactive" checked />
+            <span class="cb-switch-track"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="cb-consent">
+        <div class="cb-filter-row">
+          <div class="cb-filter-text">
+            <div class="cb-filter-name">Override consent <span class="cb-info-dot">i</span></div>
+            <p class="cb-filter-sub">Contact patients who have not given consent for the selected channel</p>
+          </div>
+          <label class="cb-switch">
+            <input type="checkbox" data-filter="consent-override" id="cb-consent-toggle" />
+            <span class="cb-switch-track"></span>
+          </label>
+        </div>
+
+        <div class="cb-consent-opts" id="cb-consent-opts" hidden>
+          <label class="cb-label">Override for</label>
+          <div class="cb-seg" id="cb-consent-seg">
+            <button type="button" data-consent="email" class="is-active">Email</button>
+            <button type="button" data-consent="phone">Phone</button>
+            <button type="button" data-consent="both">Both</button>
+          </div>
+          <p class="cb-consent-warn">
+            &#9888;&#65038; Overriding consent contacts patients who have opted out of this channel.
+            Confirm this is permitted under your practice policy and applicable regulations.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="cb-fieldset">
+      <h4>Future appointments</h4>
+      <p class="cb-fs-desc">Target patients by whether they already have something on the schedule</p>
+
+      <div class="cb-future-cards" id="cb-future-cards">
+        <label class="cb-future-card is-active" data-future="any">
+          <input type="radio" name="cb-future" value="any" checked />
+          <span class="cb-fc-name"><span class="cb-fc-dot"></span>Has a future appointment</span>
+          <p class="cb-fc-sub">Patients with any appointment already on the schedule</p>
+        </label>
+        <label class="cb-future-card" data-future="none">
+          <input type="radio" name="cb-future" value="none" />
+          <span class="cb-fc-name"><span class="cb-fc-dot"></span>Has no future appointment</span>
+          <p class="cb-fc-sub">Patients with nothing on the schedule at all</p>
+        </label>
+      </div>
+
+      <div class="cb-status-box" id="cb-status-box">
+        <div class="cb-status-head">
+          <label class="cb-label">Statuses that count as scheduled <span class="cb-info-dot">i</span></label>
+          <span class="cb-status-actions">
+            <button type="button" data-status-all>Select all</button>
+            <button type="button" data-status-none>Clear all</button>
+          </span>
+        </div>
+        <p class="cb-fs-desc">Only appointments in these statuses count as a future appointment</p>
+
+        <div class="cb-status-chips" id="cb-status-grid">
+          <label class="cb-status-chip is-on">
+            <input type="checkbox" data-status="checked-out" checked />
+            <span class="cb-chip-box">&#10003;</span>Checked Out
+          </label>
+          <label class="cb-status-chip is-on">
+            <input type="checkbox" data-status="ready-for-checkout" checked />
+            <span class="cb-chip-box">&#10003;</span>Ready For Checkout
+          </label>
+          <label class="cb-status-chip">
+            <input type="checkbox" data-status="scheduled" />
+            <span class="cb-chip-box">&#10003;</span>Scheduled
+          </label>
+          <label class="cb-status-chip">
+            <input type="checkbox" data-status="confirmed" />
+            <span class="cb-chip-box">&#10003;</span>Confirmed
+          </label>
+          <label class="cb-status-chip">
+            <input type="checkbox" data-status="arrived" />
+            <span class="cb-chip-box">&#10003;</span>Arrived
+          </label>
+          <label class="cb-status-chip">
+            <input type="checkbox" data-status="ready-for-room" />
+            <span class="cb-chip-box">&#10003;</span>Ready For Room
+          </label>
+          <label class="cb-status-chip">
+            <input type="checkbox" data-status="no-show" />
+            <span class="cb-chip-box">&#10003;</span>No Show
+          </label>
+          <label class="cb-status-chip">
+            <input type="checkbox" data-status="reschedule" />
+            <span class="cb-chip-box">&#10003;</span>Reschedule
+          </label>
+          <label class="cb-status-chip">
+            <input type="checkbox" data-status="waitlist" />
+            <span class="cb-chip-box">&#10003;</span>Waitlist
+          </label>
+          <label class="cb-status-chip">
+            <input type="checkbox" data-status="cancel" />
+            <span class="cb-chip-box">&#10003;</span>Cancel
+          </label>
+        </div>
+
+        <p class="cb-status-none" id="cb-status-warn" hidden>
+          Select at least one status, otherwise no appointment can count as scheduled.
+        </p>
+      </div>
+    </div>
 
     <div class="cb-fieldset">
       <h4>Include specific patients</h4>

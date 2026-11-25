@@ -296,6 +296,82 @@
         if (box) box.hidden = true;
       });
     }
+
+    wireConsentOverride();
+    wireFutureAppointments();
+  }
+
+  /* Future appointment scope. Choosing "no appointment at all" makes the
+     status list meaningless, so it is hidden rather than left to confuse. */
+  function wireFutureAppointments() {
+    var cards = document.getElementById("cb-future-cards");
+    var box = document.getElementById("cb-status-box");
+    if (!cards || !box) return;
+
+    cards.addEventListener("change", function () {
+      Array.prototype.forEach.call(cards.querySelectorAll(".cb-future-card"), function (c) {
+        var on = c.querySelector("input").checked;
+        c.classList.toggle("is-active", on);
+        if (on) box.hidden = c.getAttribute("data-future") === "none";
+      });
+    });
+
+    var grid = document.getElementById("cb-status-grid");
+    var warn = document.getElementById("cb-status-warn");
+    if (!grid) return;
+    var boxes = grid.querySelectorAll("[data-status]");
+
+    function syncChip(input) {
+      var chip = input.closest(".cb-status-chip");
+      if (chip) chip.classList.toggle("is-on", input.checked);
+    }
+    function syncAll() {
+      Array.prototype.forEach.call(boxes, syncChip);
+      if (warn) warn.hidden = grid.querySelectorAll("[data-status]:checked").length > 0;
+    }
+    Array.prototype.forEach.call(boxes, function (b) {
+      b.addEventListener("change", syncAll);
+    });
+
+    var selAll = box.querySelector("[data-status-all]");
+    var selNone = box.querySelector("[data-status-none]");
+    if (selAll) {
+      selAll.addEventListener("click", function () {
+        Array.prototype.forEach.call(boxes, function (b) { b.checked = true; });
+        syncAll();
+      });
+    }
+    if (selNone) {
+      selNone.addEventListener("click", function () {
+        Array.prototype.forEach.call(boxes, function (b) { b.checked = false; });
+        syncAll();
+      });
+    }
+    syncAll();
+  }
+
+  /* The consent override hides its channel picker until the override is on,
+     so the default state reads as a plain "off" with nothing to answer. */
+  function wireConsentOverride() {
+    var toggle = document.getElementById("cb-consent-toggle");
+    var opts = document.getElementById("cb-consent-opts");
+    if (!toggle || !opts) return;
+
+    function sync() {
+      opts.hidden = !toggle.checked;
+    }
+    toggle.addEventListener("change", sync);
+    sync();
+
+    var seg = document.getElementById("cb-consent-seg");
+    if (!seg) return;
+    seg.addEventListener("click", function (e) {
+      var btn = e.target.closest("button[data-consent]");
+      if (!btn) return;
+      Array.prototype.forEach.call(seg.querySelectorAll("button"), function (b) {
+        b.classList.toggle("is-active", b === btn);
+      });
+    });
   }
 
   function syncPick(box) {

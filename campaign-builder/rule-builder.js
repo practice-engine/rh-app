@@ -413,14 +413,19 @@
       })
       .join("");
 
+    // The count belongs to whichever mode is active, so the other tab reads 0.
+    var nInc = model.scope === "include" ? model.rules.length : 0;
+    var nExc = model.scope === "exclude" ? model.rules.length : 0;
+
     host.innerHTML =
-      '<div class="cb-scope">' +
-      '<button type="button" data-scope="include"' +
-      (model.scope === "include" ? ' class="is-active"' : "") +
-      ">&#10003; Include matching patients</button>" +
-      '<button type="button" data-scope="exclude"' +
-      (model.scope === "exclude" ? ' class="is-active exclude"' : "") +
-      ">&#10005; Exclude matching patients</button>" +
+      '<div class="cb-tabs cb-scope-tabs">' +
+      '<button type="button" class="cb-tab' +
+      (model.scope === "include" ? " is-active" : "") +
+      '" data-scope="include">' +
+      '<span class="cb-tab-tick">&#10003;</span> Include (' + nInc + ")</button>" +
+      '<button type="button" class="cb-tab' +
+      (model.scope === "exclude" ? " is-active exclude" : "") +
+      '" data-scope="exclude">&#10005; Exclude (' + nExc + ")</button>" +
       "</div>" +
       '<div class="cb-rule-list">' +
       '<div class="cb-group-bar"><span class="cb-group-name">PATIENTS WHERE</span></div>' +
